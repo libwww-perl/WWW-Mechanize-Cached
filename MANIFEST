@@ -1,6 +1,6 @@
 Artistic
 AUTHORS
-Cached.pm
+lib/WWW/Mechanize/Cached.pm
 Changes
 COPYING
 CREDITS

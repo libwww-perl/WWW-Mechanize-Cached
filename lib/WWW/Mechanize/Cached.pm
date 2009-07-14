@@ -9,14 +9,12 @@ WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 Version
 
-Version 1.32
-
-    $Header: /home/cvs/www-mechanize-cached/Cached.pm,v 1.18 2004/04/12 03:21:25 andy Exp $
+Version 1.33
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.32';
+$VERSION = '1.33';
 
 =head1 Synopsis
 
@@ -29,6 +27,8 @@ $VERSION = '1.32';
 
 Uses the L<Cache::Cache> hierarchy to implement a caching Mech. This
 lets one perform repeated requests without hammering a server impolitely.
+
+Repository: L<http://github.com/oalders/www-mechanize-cached/tree/master>
 
 =cut
 
@@ -115,6 +115,11 @@ sub _make_request {
         $self->{_is_cached} = 1;
     } else {
         $response = $self->SUPER::_make_request( $request, @_ );
+        
+        # http://rt.cpan.org/Public/Bug/Display.html?id=42693
+        $response->decode();
+        delete $response->{handlers};
+        
         $cache->set( $req, freeze($response) );
         $self->{_is_cached} = 0;
     }
@@ -139,16 +144,34 @@ to the cache entries, so any minor changes will result in a different
 key. This is most noticable when following links as L<WWW::Mechanize>
 adds a C<Referer> header.
 
-=head1 Bugs, Requests, Comments
+=head1 SUPPORT
 
-Support for this module is provided via the CPAN RT system:
+You can find documentation for this module with the perldoc command.
 
-    http://rt.cpan.org/NoAuth/ReportBug.html?Queue=WWW-Mechanize-Cached
+    perldoc WWW::Mechanize::Cached
 
-    bug-www-mechanize-cached@rt.cpan.org
+You can also look for information at:
 
-This makes it much easier for me to track things and thus means
-your problem is less likely to be neglected.
+=over 4
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/URI-ParseSearchString-More>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/URI-ParseSearchString-More>
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=URI-ParseSearchString-More>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/URI-ParseSearchString>
+
+=back
+
 
 =head1 Licence and copyright
 
@@ -165,8 +188,9 @@ L<perlgpl> as supplied with Perl 5.8.1 and later.
 
 =head1 Author
 
-Iain Truskett <spoon@cpan.org>, currently maintained by Andy Lester
-<petdance@cpan.org>
+Iain Truskett <spoon@cpan.org>
+Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
+Currently maintained by Olaf Alders
 
 =head1 See also
 

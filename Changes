@@ -1,5 +1,12 @@
 Revision history for Perl extension WWW::Mechanize::Cached
 
+1.33
+        * Now maintained by Olaf Alders.  Thanks to Andy Lester for offering
+          to let me take this on.
+        * Applied patch from RT http://rt.cpan.org/Public/Bug/Display.html?id=42693
+          This fixes the "Can't store CODE items" errors
+        * Now requires Test::Warn 0.11 (fixes errors in t/002-bad-custom-cache.t)
+        * Moved development to GitHub: http://github.com/oalders/www-mechanize-cached/tree/master
 
 1.32    Sun Apr 11 22:19:49 CDT 2004
 
