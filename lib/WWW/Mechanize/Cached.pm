@@ -3,11 +3,11 @@ package WWW::Mechanize::Cached;
 use strict;
 use warnings FATAL => 'all';
 
-=head1 Name
+=head1 NAME
 
 WWW::Mechanize::Cached - Cache response to be polite
 
-=head1 Version
+=head1 VERSION
 
 Version 1.33
 
@@ -16,14 +16,14 @@ Version 1.33
 use vars qw( $VERSION );
 $VERSION = '1.33';
 
-=head1 Synopsis
+=head1 SYNOPSIS
 
     use WWW::Mechanize::Cached;
 
     my $cacher = WWW::Mechanize::Cached->new;
     $cacher->get( $url );
 
-=head1 Description
+=head1 DESCRIPTION
 
 Uses the L<Cache::Cache> hierarchy to implement a caching Mech. This
 lets one perform repeated requests without hammering a server impolitely.
@@ -38,7 +38,7 @@ use Storable qw( freeze thaw );
 
 my $cache_key = __PACKAGE__;
 
-=head1 Constructor
+=head1 CONSTRUCTOR
 
 =head2 new
 
@@ -85,7 +85,7 @@ sub new {
     return $self;
 }
 
-=head1 Methods
+=head1 METHODS
 
 Most methods are provided by L<WWW::Mechanize>. See that module's
 documentation for details.
@@ -132,7 +132,7 @@ sub _make_request {
 
 
 
-=head1 Thanks
+=head1 THANKS
 
 Iain Truskett for writing this in the first place.
 
@@ -189,12 +189,14 @@ L<perlgpl> as supplied with Perl 5.8.1 and later.
 =head1 AUTHOR
 
 Iain Truskett <spoon@cpan.org>
+
 Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
-Currently maintained by Olaf Alders
 
-=head1 See also
+Currently maintained by Olaf Alders <olaf@wundercounter.com>
 
-L<perl>, L<WWW::Mechanize>.
+=head1 SEE ALSO
+
+L<WWW::Mechanize>.
 
 =cut
 
