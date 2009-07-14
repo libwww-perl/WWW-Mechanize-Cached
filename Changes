@@ -1,0 +1,69 @@
+Revision history for Perl extension WWW::Mechanize::Cached
+
+
+1.32    Sun Apr 11 22:19:49 CDT 2004
+
+        [ENHANCEMENTS]
+        * Added the $mech->is_cached() method.
+
+        * Verified that reusing an existing cache gives you the pages back.
+
+        [INTERNAL]
+        * Now requires WWW::Mechanize 1.00, because previous versions
+          goofed up the HTTP headers on some requests.
+
+
+1.30    Sun Mar 14 02:51:19 CST 2004
+
+        No new features.
+
+        [FIXED]
+        * Fixed stupid configuration problem in t/bad-cache-test.t.
+          If you got 1.28 installed OK, you don't need 1.30.
+
+1.28    Sat Mar 13 22:05:26 CST 2004
+
+        [THINGS THAT WILL BREAK YOUR CODE]
+        * The C<cache> parm to the constructor is no longer a set
+          of parms to specify how the cache will be initialized.  It
+          must now be a fully-initialized cache object, probably in
+          the Cache::Cache hierarchy.
+
+        * Existing caches will not work, because I changed the
+          directory that they get written to.  It used to go into
+          /tmp/FileCache/WWW::Mechanize::Cached, but now will go into
+          /tmp/FileCache/www-mechanize-cached.  This is so the Windows
+          folks can use the module, too.
+
+          However, if you want to create your own cache object that
+          writes to /tmp/FileCache/WWW::Mechanize::Cached, for
+          compatibility, you can create it and pass it in.
+
+        [ENHANCEMENTS]
+        * You can now specify your own Cache::Cache object to pass
+          into the constructor.
+
+1.26    Sun Feb 29 23:59:48 CST 2004
+
+        [FIXES]
+        * Removed a duplicate $key.  Cleaned up some of the internal code,
+          and made the variable names more explicit.
+
+        * Added an autocheck=>1 to the t/cached.t test.  Also hits
+          time.gov instead of Iain's now-gone website.
+
+        * Removed the SIGNATURE, which I don't intend to maintain.
+
+1.24    Sun Jan 18 23:10:40 CST 2004
+
+        NO NEW FUNCTIONALITY.
+
+        On December 29th, 2003, Iain Truskett, the original author of
+        WWW::Mechanize::Cached passed away.  I've taken over maintenance
+        of the module.  If you're interested in carrying on Iain's work,
+        let me know.
+
+
+1.23    December 1, 2003
+        Initial version, released by Iain Truskett.
+
