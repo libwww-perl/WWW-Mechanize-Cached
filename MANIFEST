@@ -18,4 +18,6 @@ t/004-cached.t
 t/005-custom-cache.t
 t/006-pod-coverage.t
 t/007-pod.t
+t/008-critic.t
+t/perlcriticrc
 t/TestCache.pm

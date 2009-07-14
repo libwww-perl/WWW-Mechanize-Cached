@@ -136,7 +136,7 @@ sub _make_request {
 
 Iain Truskett for writing this in the first place.
 
-=head1 Oddities
+=head1 BUGS AND LIMITATIONS
 
 It may sometimes seem as if it's not caching something. And this
 may well be true. It uses the HTTP request, in string form, as the key
@@ -156,24 +156,24 @@ You can also look for information at:
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/URI-ParseSearchString-More>
+L<http://annocpan.org/dist/WWW-Mechanize-Cached>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/URI-ParseSearchString-More>
+L<http://cpanratings.perl.org/d/WWW-Mechanize-Cached>
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=URI-ParseSearchString-More>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Mechanize-Cached>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/URI-ParseSearchString>
+L<http://search.cpan.org/dist/WWW-Mechanize-Cached>
 
 =back
 
 
-=head1 Licence and copyright
+=head1 LICENSE AND COPYRIGHT
 
 This module is copyright Iain Truskett and Andy Lester, 2004. All rights
 reserved.
@@ -186,7 +186,7 @@ The full text of the licences can be found in the F<Artistic> and
 F<COPYING> files included with this module, or in L<perlartistic> and
 L<perlgpl> as supplied with Perl 5.8.1 and later.
 
-=head1 Author
+=head1 AUTHOR
 
 Iain Truskett <spoon@cpan.org>
 Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
@@ -198,4 +198,4 @@ L<perl>, L<WWW::Mechanize>.
 
 =cut
 
-"We miss you, Spoon";
+"We miss you, Spoon"; ## no critic

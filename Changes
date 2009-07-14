@@ -7,6 +7,7 @@ Revision history for Perl extension WWW::Mechanize::Cached
           This fixes the "Can't store CODE items" errors
         * Now requires Test::Warn 0.11 (fixes errors in t/002-bad-custom-cache.t)
         * Moved development to GitHub: http://github.com/oalders/www-mechanize-cached/tree/master
+        * Added Perl::Critic author tests
 
 1.32    Sun Apr 11 22:19:49 CDT 2004
 
