@@ -1,5 +1,11 @@
 Revision history for Perl extension WWW::Mechanize::Cached
 
+1.35 2009-11-20
+    - Changed test URL, which was causing a small percentage of installs to
+      fail
+    - Added latest HTTP::Headers to prerequisites in order to prevent some
+      failed installs
+
 1.34 2009-11-20
     - Added first example script
     - Expanded documentation re: custom caches

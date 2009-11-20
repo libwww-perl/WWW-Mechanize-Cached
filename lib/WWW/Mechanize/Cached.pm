@@ -4,7 +4,7 @@ use strict;
 use warnings FATAL => 'all';
 
 use vars qw( $VERSION );
-$VERSION = '1.34';
+$VERSION = '1.35';
 
 use base qw( WWW::Mechanize );
 use Carp qw( carp croak );
@@ -18,7 +18,7 @@ WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-Version 1.34
+Version 1.35
 
 =head1 SYNOPSIS
 
