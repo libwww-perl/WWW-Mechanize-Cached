@@ -4,7 +4,7 @@ use strict;
 use warnings FATAL => 'all';
 use Test::More tests => 14;
 use Cache::FileCache;
-use constant URL => 'http://www.time.gov/timezone.cgi?Central/d/-6';
+use constant URL => 'http://www.google.com';
 
 BEGIN {
     use_ok( 'WWW::Mechanize::Cached' );

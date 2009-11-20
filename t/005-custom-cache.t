@@ -3,7 +3,7 @@ use warnings FATAL => 'all';
 use lib 't';
 
 use Test::More tests => 4;
-use constant URL => 'http://www.time.gov/timezone.cgi?Central/d/-6';
+use constant URL => 'http://www.google.com';
 use TestCache;
 
 BEGIN {
