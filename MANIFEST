@@ -1,16 +1,13 @@
-Artistic
 AUTHORS
 lib/WWW/Mechanize/Cached.pm
 Changes
-COPYING
-CREDITS
 INSTALL
-LICENCE
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml
 README
+examples/001-custom-cache.pl
 t/001-load.t
 t/002-bad-custom-cache.t
 t/003-basic.t

@@ -3,18 +3,22 @@ package WWW::Mechanize::Cached;
 use strict;
 use warnings FATAL => 'all';
 
+use vars qw( $VERSION );
+$VERSION = '1.34';
+
+use base qw( WWW::Mechanize );
+use Carp qw( carp croak );
+use Storable qw( freeze thaw );
+
+my $cache_key = __PACKAGE__;
+
 =head1 NAME
 
 WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-Version 1.33
-
-=cut
-
-use vars qw( $VERSION );
-$VERSION = '1.33';
+Version 1.34
 
 =head1 SYNOPSIS
 
@@ -23,6 +27,19 @@ $VERSION = '1.33';
     my $cacher = WWW::Mechanize::Cached->new;
     $cacher->get( $url );
 
+    # or, with your own Cache object
+    use CHI;
+    use WWW::Mechanize::Cached;
+    
+    my $cache = CHI->new(
+        driver   => 'File',
+        root_dir => '/tmp/mech-example'
+    );
+    
+    my $mech = WWW::Mechanize::Cached->new( cache => $cache );
+    $mech->get("http://www.google.com");
+    
+
 =head1 DESCRIPTION
 
 Uses the L<Cache::Cache> hierarchy to implement a caching Mech. This
@@ -30,60 +47,47 @@ lets one perform repeated requests without hammering a server impolitely.
 
 Repository: L<http://github.com/oalders/www-mechanize-cached/tree/master>
 
-=cut
-
-use base qw( WWW::Mechanize );
-use Carp qw( carp croak );
-use Storable qw( freeze thaw );
-
-my $cache_key = __PACKAGE__;
-
 =head1 CONSTRUCTOR
 
 =head2 new
 
-Behaves like, and calls, L<WWW::Mechanize>'s C<new> method.  Any parms
-passed in get passed to WWW::Mechanize's constructor.
+Behaves like, and calls, L<WWW::Mechanize>'s C<new> method.  Any params,
+other than those explicitly listed here are passed directly to
+WWW::Mechanize's constructor.
 
-You can pass in a C<< cache => $cache_object >> if you want.  The
+You may pass in a C<< cache => $cache_object >> if you wish.  The
 I<$cache_object> must have C<get()> and C<set()> methods like the
 C<Cache::Cache> family.
 
-The I<cache> parm used to be a set of parms that described how the
-cache object was to be initialized, but I think it makes more sense
-to have the user initialize the cache however she wants, and then
-pass it in.
+The default Cache object is set up with the following params:
 
-=cut
+    my $cache_params = {
+        default_expires_in => "1d",
+        namespace => 'www-mechanize-cached',
+    };
+    
+    $cache = Cache::FileCache->new( $cache_params );
+    
+    
+This should be fine if you only want to use a disk-based cache, you only want
+to cache results for 1 day and you're not in a shared hosting environment.
+If any of this presents a problem for you, you should pass in your own Cache
+object.  These defaults will remain unchanged in order to maintain backwards
+compatibility.  
 
-sub new {
-    my $class = shift;
-    my %mech_args = @_;
+For example, you may want to try something like this:
 
-    my $cache = delete $mech_args{cache};
-    if ( $cache ) {
-        my $ok = (ref($cache) ne "HASH") && $cache->can("get") && $cache->can("set");
-        if ( !$ok ) {
-            carp "The cache parm must be an initialized cache object";
-            $cache = undef;
-        }
-    }
+    use WWW::Mechanize::Cached;
+    use CHI;
+    
+    my $cache = CHI->new(
+        driver   => 'File',
+        root_dir => '/tmp/mech-example'
+    );
+    
+    my $mech = WWW::Mechanize::Cached->new( cache => $cache );
+    $mech->get("http://www.google.com");
 
-    my $self = $class->SUPER::new( %mech_args );
-
-    if ( !$cache ) {
-        require Cache::FileCache;
-        my $cache_parms = {
-            default_expires_in => "1d",
-            namespace => 'www-mechanize-cached',
-        };
-        $cache = Cache::FileCache->new( $cache_parms );
-    }
-
-    $self->{$cache_key} = $cache;
-
-    return $self;
-}
 
 =head1 METHODS
 
@@ -94,43 +98,6 @@ documentation for details.
 
 Returns true if the current page is from the cache, or false if not.
 If it returns C<undef>, then you don't have any current request.
-
-=cut
-
-sub is_cached {
-    my $self = shift;
-
-    return $self->{_is_cached};
-}
-
-sub _make_request {
-    my $self = shift;
-    my $request = shift;
-
-    my $req = $request->as_string;
-    my $cache = $self->{$cache_key};
-    my $response= $cache->get( $req );
-    if ( $response ) {
-        $response = thaw $response;
-        $self->{_is_cached} = 1;
-    } else {
-        $response = $self->SUPER::_make_request( $request, @_ );
-        
-        # http://rt.cpan.org/Public/Bug/Display.html?id=42693
-        $response->decode();
-        delete $response->{handlers};
-        
-        $cache->set( $req, freeze($response) );
-        $self->{_is_cached} = 0;
-    }
-
-    # An odd line to need.
-    $self->{proxy} = {} unless defined $self->{proxy};
-
-    return $response;
-}
-
-
 
 =head1 THANKS
 
@@ -182,10 +149,6 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.000 or,
 at your option, any later version of Perl 5 you may have available.
 
-The full text of the licences can be found in the F<Artistic> and
-F<COPYING> files included with this module, or in L<perlartistic> and
-L<perlgpl> as supplied with Perl 5.8.1 and later.
-
 =head1 AUTHOR
 
 Iain Truskett <spoon@cpan.org>
@@ -200,4 +163,70 @@ L<WWW::Mechanize>.
 
 =cut
 
-"We miss you, Spoon"; ## no critic
+sub new {
+    my $class     = shift;
+    my %mech_args = @_;
+
+    my $cache = delete $mech_args{cache};
+    if ( $cache ) {
+        my $ok
+            = ( ref( $cache ) ne "HASH" )
+            && $cache->can( "get" )
+            && $cache->can( "set" );
+        if ( !$ok ) {
+            carp "The cache parm must be an initialized cache object";
+            $cache = undef;
+        }
+    }
+
+    my $self = $class->SUPER::new( %mech_args );
+
+    if ( !$cache ) {
+        require Cache::FileCache;
+        my $cache_params = {
+            default_expires_in => "1d",
+            namespace          => 'www-mechanize-cached',
+        };
+        $cache = Cache::FileCache->new( $cache_params );
+    }
+
+    $self->{$cache_key} = $cache;
+
+    return $self;
+}
+
+sub is_cached {
+    my $self = shift;
+
+    return $self->{_is_cached};
+}
+
+sub _make_request {
+    my $self    = shift;
+    my $request = shift;
+
+    my $req      = $request->as_string;
+    my $cache    = $self->{$cache_key};
+    my $response = $cache->get( $req );
+    if ( $response ) {
+        $response = thaw $response;
+        $self->{_is_cached} = 1;
+    }
+    else {
+        $response = $self->SUPER::_make_request( $request, @_ );
+
+        # http://rt.cpan.org/Public/Bug/Display.html?id=42693
+        $response->decode();
+        delete $response->{handlers};
+
+        $cache->set( $req, freeze( $response ) );
+        $self->{_is_cached} = 0;
+    }
+
+    # An odd line to need.
+    $self->{proxy} = {} unless defined $self->{proxy};
+
+    return $response;
+}
+
+"We miss you, Spoon";    ## no critic
