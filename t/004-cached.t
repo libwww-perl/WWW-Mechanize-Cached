@@ -33,7 +33,7 @@ FIRST_CACHE: {
 
     my $second = $mech->get( URL )->content;
     ok( defined $mech->is_cached, "Second request" );
-    ok( !$mech->is_cached, "should NOT be cached" );
+    ok( $mech->is_cached, "should be cached" );
 
     sleep 3; # 3 due to Referer header
     my $third  = $mech->get( URL )->content;

@@ -181,8 +181,16 @@ sub is_cached {
 sub _make_request {
     my $self    = shift;
     my $request = shift;
+    
+    my $clone = $request->clone;
+    $clone->header( Referer => undef );
 
-    my $req      = $request->as_string;
+    my $req      = $clone->as_string;
+    
+    #use Data::Dump qw( dump );
+    #print dump( $req );
+    #print "request key: $req\n";
+    
     my $cache    = $self->{$cache_key};
     my $response = $cache->get( $req );
     if ( $response ) {
