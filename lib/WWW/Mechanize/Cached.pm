@@ -1,10 +1,7 @@
-package WWW::Mechanize::Cached;
-
 use strict;
 use warnings FATAL => 'all';
 
-use vars qw( $VERSION );
-$VERSION = '1.35';
+package WWW::Mechanize::Cached;
 
 use base qw( WWW::Mechanize );
 use Carp qw( carp croak );
@@ -12,13 +9,7 @@ use Storable qw( freeze thaw );
 
 my $cache_key = __PACKAGE__;
 
-=head1 NAME
-
-WWW::Mechanize::Cached - Cache response to be polite
-
-=head1 VERSION
-
-Version 1.35
+# ABSTRACT: Cache response to be polite
 
 =head1 SYNOPSIS
 
@@ -42,8 +33,8 @@ Version 1.35
 
 =head1 DESCRIPTION
 
-Uses the L<Cache::Cache> hierarchy to implement a caching Mech. This
-lets one perform repeated requests without hammering a server impolitely.
+Uses the L<Cache::Cache> hierarchy to implement a caching Mech. This lets one
+perform repeated requests without hammering a server impolitely.
 
 Repository: L<http://github.com/oalders/www-mechanize-cached/tree/master>
 
@@ -51,19 +42,18 @@ Repository: L<http://github.com/oalders/www-mechanize-cached/tree/master>
 
 =head2 new
 
-Behaves like, and calls, L<WWW::Mechanize>'s C<new> method.  Any params,
-other than those explicitly listed here are passed directly to
-WWW::Mechanize's constructor.
+Behaves like, and calls, L<WWW::Mechanize>'s C<new> method. Any params, other
+than those explicitly listed here are passed directly to WWW::Mechanize's
+constructor.
 
-You may pass in a C<< cache => $cache_object >> if you wish.  The
+You may pass in a C<< cache => $cache_object >> if you wish. The
 I<$cache_object> must have C<get()> and C<set()> methods like the
 C<Cache::Cache> family.
 
 The default Cache object is set up with the following params:
 
     my $cache_params = {
-        default_expires_in => "1d",
-        namespace => 'www-mechanize-cached',
+        default_expires_in => "1d", namespace => 'www-mechanize-cached',
     };
     
     $cache = Cache::FileCache->new( $cache_params );
@@ -96,8 +86,8 @@ documentation for details.
 
 =head2 is_cached()
 
-Returns true if the current page is from the cache, or false if not.
-If it returns C<undef>, then you don't have any current request.
+Returns true if the current page is from the cache, or false if not. If it
+returns C<undef>, then you don't have any current request.
 
 =head1 THANKS
 
@@ -105,11 +95,10 @@ Iain Truskett for writing this in the first place.
 
 =head1 BUGS AND LIMITATIONS
 
-It may sometimes seem as if it's not caching something. And this
-may well be true. It uses the HTTP request, in string form, as the key
-to the cache entries, so any minor changes will result in a different
-key. This is most noticable when following links as L<WWW::Mechanize>
-adds a C<Referer> header.
+It may sometimes seem as if it's not caching something. And this may well be
+true. It uses the HTTP request, in string form, as the key to the cache
+entries, so any minor changes will result in a different key. This is most
+noticable when following links as L<WWW::Mechanize> adds a C<Referer> header.
 
 =head1 SUPPORT
 
@@ -139,23 +128,11 @@ L<http://search.cpan.org/dist/WWW-Mechanize-Cached>
 
 =back
 
-
-=head1 LICENSE AND COPYRIGHT
-
-This module is copyright Iain Truskett and Andy Lester, 2004. All rights
-reserved.
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.000 or,
-at your option, any later version of Perl 5 you may have available.
-
-=head1 AUTHOR
+=head1 PAST AUTHORS
 
 Iain Truskett <spoon@cpan.org>
 
 Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
-
-Currently maintained by Olaf Alders <olaf@wundercounter.com>
 
 =head1 SEE ALSO
 
