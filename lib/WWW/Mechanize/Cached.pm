@@ -1,13 +1,16 @@
-use strict;
 use warnings FATAL => 'all';
 
 package WWW::Mechanize::Cached;
 
-use base qw( WWW::Mechanize );
+use Moose;
+extends 'WWW::Mechanize';
 use Carp qw( carp croak );
 use Storable qw( freeze thaw );
 
-my $cache_key = __PACKAGE__;
+has 'cache'            => ( is => 'rw', );
+has 'is_cached'        => ( is => 'rw', default => 0 );
+has 'positive_cache'   => ( is => 'rw', default => 1 );
+has 'ref_in_cache_key' => ( is => 'rw', default => 0 );
 
 # ABSTRACT: Cache response to be polite
 
@@ -84,21 +87,48 @@ For example, you may want to try something like this:
 Most methods are provided by L<WWW::Mechanize>. See that module's
 documentation for details.
 
+=head2 cache( $cache_object )
+
+Requires an caching object which has a get() and a set() method. Using the CHI
+module to create your cache is the recommended way. See new() for examples.
+
 =head2 is_cached()
 
 Returns true if the current page is from the cache, or false if not. If it
 returns C<undef>, then you don't have any current request.
 
+=head2 positive_cache( 0|1 )
+
+As of version 1.36 positive caching is enabled by default. Up to this point,
+this module had employed a negative cache, which means it cached 404
+responses, temporary redirects etc. In most cases, this is not what you want,
+so the default behaviour now better reflects this. You can revert to the
+negative cache quite easily:
+
+    # cache everything (404s, all 300s etc)
+    $mech->positive_cache( 0 );
+    
+=head2 ref_in_cache_key( 0|1 )
+
+Allow the referring URL to be used when creating the cache key.  This is off
+by default.  In almost all cases, you will not want to enable this, but it is
+available to you for reasons of backwards compatibility and giving you enough
+rope to hang yourself.  
+
+Previous to v1.36 the following was in the "BUGS AND LIMITATIONS" section:
+
+    It may sometimes seem as if it's not caching something. And this may well
+    be true. It uses the HTTP request, in string form, as the key to the cache
+    entries, so any minor changes will result in a different key. This is most
+    noticable when following links as L<WWW::Mechanize> adds a C<Referer>
+    header.
+
+See RT #56757 for a detailed example of the bugs this functionality can
+trigger.
+
 =head1 THANKS
 
 Iain Truskett for writing this in the first place.
-
-=head1 BUGS AND LIMITATIONS
-
-It may sometimes seem as if it's not caching something. And this may well be
-true. It uses the HTTP request, in string form, as the key to the cache
-entries, so any minor changes will result in a different key. This is most
-noticable when following links as L<WWW::Mechanize> adds a C<Referer> header.
 
 =head1 SUPPORT
 
@@ -146,15 +176,18 @@ sub new {
 
     my $cache = delete $mech_args{cache};
     if ( $cache ) {
-        my $ok
+        my $ok 
             = ( ref( $cache ) ne "HASH" )
             && $cache->can( "get" )
             && $cache->can( "set" );
         if ( !$ok ) {
-            carp "The cache parm must be an initialized cache object";
+            carp "The cache param must be an initialized cache object";
             $cache = undef;
         }
     }
+
+    my $ref_in_key     = delete $mech_args{'ref_in_cache_key'};
+    my $positive_cache = delete $mech_args{'positive_cache'};
 
     my $self = $class->SUPER::new( %mech_args );
 
@@ -167,51 +200,68 @@ sub new {
         $cache = Cache::FileCache->new( $cache_params );
     }
 
-    $self->{$cache_key} = $cache;
+    $self->cache( $cache );
+    $self->ref_in_cache_key( $ref_in_key );
+    $self->positive_cache( $positive_cache );
 
     return $self;
 }
 
-sub is_cached {
-    my $self = shift;
-
-    return $self->{_is_cached};
-}
-
 sub _make_request {
+    
     my $self    = shift;
     my $request = shift;
-    
-    my $clone = $request->clone;
-    $clone->header( Referer => undef );
+    my $req     = $request;
 
-    my $req      = $clone->as_string;
-    
-    #use Data::Dump qw( dump );
-    #print dump( $req );
-    #print "request key: $req\n";
-    
-    my $cache    = $self->{$cache_key};
-    my $response = $cache->get( $req );
-    if ( $response ) {
-        $response = thaw $response;
-        $self->{_is_cached} = 1;
-    }
-    else {
-        $response = $self->SUPER::_make_request( $request, @_ );
-
-        # http://rt.cpan.org/Public/Bug/Display.html?id=42693
-        $response->decode();
-        delete $response->{handlers};
-
-        $cache->set( $req, freeze( $response ) );
-        $self->{_is_cached} = 0;
-    }
+    $self->is_cached( 0 );
 
     # An odd line to need.
+    # No idea what purpose this serves?  OALDERS
     $self->{proxy} = {} unless defined $self->{proxy};
 
+    # RT #56757
+    if ( !$self->ref_in_cache_key ) {
+        my $clone = $request->clone;
+        $clone->header( Referer => undef );
+        $req = $clone->as_string;
+    }
+
+    my $response = $self->cache->get( $req );
+
+    if ( $self->_cache_ok( $response ) ) {
+        $response = thaw $response;
+        $self->is_cached( 1 );
+        return $response;
+    }
+
+    $response = $self->SUPER::_make_request( $request, @_ );
+
+    # http://rt.cpan.org/Public/Bug/Display.html?id=42693
+    $response->decode();
+    delete $response->{handlers};
+
+    if ( $self->_cache_ok( $response ) ) {
+        $self->cache->set( $req, freeze( $response ) );
+    }
+
     return $response;
+}
+
+sub _cache_ok {
+
+    my $self     = shift;
+    my $response = shift;
+
+    return 0 if !$response;
+    return 1 if !$self->positive_cache;
+
+    if ( ( $response->code >= 200 && $response->code < 300 )
+        || $response->code == 301 )
+    {
+        return 1;
+    }
+    return 0;
+
 }
 
 "We miss you, Spoon";    ## no critic

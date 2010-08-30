@@ -7,6 +7,7 @@ use warnings;
 use lib 't';
 
 use Find::Lib;
+use Path::Class qw(file);
 use Test::More tests => 63;
 use TestCache;
 
@@ -22,7 +23,8 @@ isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
 my @iter = ( 1..10 );
 foreach my $i ( @iter ) {
-    my $page = "file://" . Find::Lib::base() . "/pages/$i.html";
+    my $file = file( Find::Lib::base(), 'pages', "$i.html" );
+    my $page = "file://" . $file->stringify;
     $mech->get( $page );
     cmp_ok( $mech->content, '==', $i, "page $i has correct content" );
     ok( !$mech->is_cached, "page $i NOT in cache");

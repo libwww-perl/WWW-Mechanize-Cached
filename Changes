@@ -1,5 +1,11 @@
 Revision history for Perl extension WWW::Mechanize::Cached
 
+1.36 2010-08-30
+    - Caching is now positive by default (was negative up to this point)
+    - Referring URLs are now, by defaut, not used when creating cache keys.
+      This reverses the behaviour of previous versions.  RT #56757
+    - Now using Moose and Dist::Zilla
+
 1.35 2009-11-20
     - Changed test URL, which was causing a small percentage of installs to
       fail
