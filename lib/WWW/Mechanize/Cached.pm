@@ -5,12 +5,13 @@ package WWW::Mechanize::Cached;
 use Moose;
 extends 'WWW::Mechanize';
 use Carp qw( carp croak );
+use Data::Dump qw( dump );
 use Storable qw( freeze thaw );
 
 has 'cache'            => ( is => 'rw', );
-has 'is_cached'        => ( is => 'rw', default => undef );
-has 'positive_cache'   => ( is => 'rw', default => 1 );
-has 'ref_in_cache_key' => ( is => 'rw', default => 0 );
+has 'is_cached'        => ( is => 'rw', );
+has 'positive_cache'   => ( is => 'rw', );
+has 'ref_in_cache_key' => ( is => 'rw', );
 
 # ABSTRACT: Cache response to be polite
 
@@ -186,8 +187,10 @@ sub new {
         }
     }
 
-    my $ref_in_key     = delete $mech_args{'ref_in_cache_key'};
-    my $positive_cache = delete $mech_args{'positive_cache'};
+    my %cached_args = %mech_args;
+    
+    delete $mech_args{ref_in_cache_key};
+    delete $mech_args{positive_cache};
 
     my $self = $class->SUPER::new( %mech_args );
 
@@ -201,8 +204,21 @@ sub new {
     }
 
     $self->cache( $cache );
-    $self->ref_in_cache_key( $ref_in_key );
-    $self->positive_cache( $positive_cache );
+    
+    my %defaults = (
+        ref_in_cache_key => 0,
+        positive_cache => 1,
+    );
+    
+    foreach my $arg ('ref_in_cache_key', 'positive_cache' ) {
+        if ( exists $cached_args{$arg} ) {
+            $self->$arg( $cached_args{$arg} );
+        }
+        else {
+            $self->$arg( $defaults{$arg} );
+        }
+    }
+    $self->is_cached( undef );
 
     return $self;
 }
@@ -227,9 +243,11 @@ sub _make_request {
     }
 
     my $response = $self->cache->get( $req );
+    if ( $response ) {
+        $response = thaw( $response );
+    }
 
     if ( $self->_cache_ok( $response ) ) {
-        $response = thaw $response;
         $self->is_cached( 1 );
         return $response;
     }
@@ -264,4 +282,7 @@ sub _cache_ok {
 
 }
 
+__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
+
 "We miss you, Spoon";    ## no critic
+

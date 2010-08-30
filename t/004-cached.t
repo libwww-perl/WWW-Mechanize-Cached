@@ -4,6 +4,7 @@ use strict;
 use warnings FATAL => 'all';
 use Test::More tests => 14;
 use Cache::FileCache;
+use Devel::SimpleTrace;
 use constant URL => 'http://www.google.com';
 
 BEGIN {
