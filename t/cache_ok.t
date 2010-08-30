@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use HTTP::Request;
-use Test::More tests => 2;
+use Test::More tests => 6;
 
 BEGIN {
     use_ok( 'WWW::Mechanize::Cached' );

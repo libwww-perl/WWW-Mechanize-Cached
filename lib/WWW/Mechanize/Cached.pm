@@ -1,8 +1,8 @@
+use Moose;
 use warnings FATAL => 'all';
 
 package WWW::Mechanize::Cached;
 
-use Moose;
 extends 'WWW::Mechanize';
 use Carp qw( carp croak );
 use Data::Dump qw( dump );
