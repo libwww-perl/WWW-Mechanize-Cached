@@ -1,5 +1,9 @@
 Revision history for Perl extension WWW::Mechanize::Cached
 
+1.37 2010-08-30
+    - Removed TestCache from Makefile.  Had been automatically added
+      by Dist::Zilla
+
 1.36 2010-08-30
     - Caching is now positive by default (was negative up to this point)
     - Referring URLs are now, by defaut, not used when creating cache keys.
