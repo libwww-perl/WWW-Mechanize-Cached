@@ -1,8 +1,9 @@
-use Moose;
+use strict;
 use warnings FATAL => 'all';
 
 package WWW::Mechanize::Cached;
 
+use Moose;
 extends 'WWW::Mechanize';
 use Carp qw( carp croak );
 use Data::Dump qw( dump );
@@ -12,6 +13,121 @@ has 'cache'            => ( is => 'rw', );
 has 'is_cached'        => ( is => 'rw', );
 has 'positive_cache'   => ( is => 'rw', );
 has 'ref_in_cache_key' => ( is => 'rw', );
+
+sub new {
+    my $class     = shift;
+    my %mech_args = @_;
+
+    my $cache = delete $mech_args{cache};
+    if ( $cache ) {
+        my $ok 
+            = ( ref( $cache ) ne "HASH" )
+            && $cache->can( "get" )
+            && $cache->can( "set" );
+        if ( !$ok ) {
+            carp "The cache param must be an initialized cache object";
+            $cache = undef;
+        }
+    }
+
+    my %cached_args = %mech_args;
+    
+    delete $mech_args{ref_in_cache_key};
+    delete $mech_args{positive_cache};
+
+    my $self = $class->SUPER::new( %mech_args );
+
+    if ( !$cache ) {
+        require Cache::FileCache;
+        my $cache_params = {
+            default_expires_in => "1d",
+            namespace          => 'www-mechanize-cached',
+        };
+        $cache = Cache::FileCache->new( $cache_params );
+    }
+
+    $self->cache( $cache );
+    
+    my %defaults = (
+        ref_in_cache_key => 0,
+        positive_cache => 1,
+    );
+    
+    foreach my $arg ('ref_in_cache_key', 'positive_cache' ) {
+        if ( exists $cached_args{$arg} ) {
+            $self->$arg( $cached_args{$arg} );
+        }
+        else {
+            $self->$arg( $defaults{$arg} );
+        }
+    }
+    $self->is_cached( undef );
+
+    return $self;
+}
+
+sub _make_request {
+    
+    my $self    = shift;
+    my $request = shift;
+    my $req     = $request;
+
+    $self->is_cached( 0 );
+
+    # An odd line to need.
+    # No idea what purpose this serves?  OALDERS
+    $self->{proxy} = {} unless defined $self->{proxy};
+
+    # RT #56757
+    if ( !$self->ref_in_cache_key ) {
+        my $clone = $request->clone;
+        $clone->header( Referer => undef );
+        $req = $clone->as_string;
+    }
+
+    my $response = $self->cache->get( $req );
+    if ( $response ) {
+        $response = thaw( $response );
+    }
+
+    if ( $self->_cache_ok( $response ) ) {
+        $self->is_cached( 1 );
+        return $response;
+    }
+
+    $response = $self->SUPER::_make_request( $request, @_ );
+
+    # http://rt.cpan.org/Public/Bug/Display.html?id=42693
+    $response->decode();
+    delete $response->{handlers};
+
+    if ( $self->_cache_ok( $response ) ) {
+        $self->cache->set( $req, freeze( $response ) );
+    }
+
+    return $response;
+}
+
+sub _cache_ok {
+
+    my $self     = shift;
+    my $response = shift;
+
+    return 0 if !$response;
+    return 1 if !$self->positive_cache;
+
+    if ( ( $response->code >= 200 && $response->code < 300 )
+        || $response->code == 301 )
+    {
+        return 1;
+    }
+    return 0;
+
+}
+
+__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
+
+"We miss you, Spoon";    ## no critic
 
 # ABSTRACT: Cache response to be polite
 
@@ -170,119 +286,3 @@ Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
 L<WWW::Mechanize>.
 
 =cut
-
-sub new {
-    my $class     = shift;
-    my %mech_args = @_;
-
-    my $cache = delete $mech_args{cache};
-    if ( $cache ) {
-        my $ok 
-            = ( ref( $cache ) ne "HASH" )
-            && $cache->can( "get" )
-            && $cache->can( "set" );
-        if ( !$ok ) {
-            carp "The cache param must be an initialized cache object";
-            $cache = undef;
-        }
-    }
-
-    my %cached_args = %mech_args;
-    
-    delete $mech_args{ref_in_cache_key};
-    delete $mech_args{positive_cache};
-
-    my $self = $class->SUPER::new( %mech_args );
-
-    if ( !$cache ) {
-        require Cache::FileCache;
-        my $cache_params = {
-            default_expires_in => "1d",
-            namespace          => 'www-mechanize-cached',
-        };
-        $cache = Cache::FileCache->new( $cache_params );
-    }
-
-    $self->cache( $cache );
-    
-    my %defaults = (
-        ref_in_cache_key => 0,
-        positive_cache => 1,
-    );
-    
-    foreach my $arg ('ref_in_cache_key', 'positive_cache' ) {
-        if ( exists $cached_args{$arg} ) {
-            $self->$arg( $cached_args{$arg} );
-        }
-        else {
-            $self->$arg( $defaults{$arg} );
-        }
-    }
-    $self->is_cached( undef );
-
-    return $self;
-}
-
-sub _make_request {
-    
-    my $self    = shift;
-    my $request = shift;
-    my $req     = $request;
-
-    $self->is_cached( 0 );
-
-    # An odd line to need.
-    # No idea what purpose this serves?  OALDERS
-    $self->{proxy} = {} unless defined $self->{proxy};
-
-    # RT #56757
-    if ( !$self->ref_in_cache_key ) {
-        my $clone = $request->clone;
-        $clone->header( Referer => undef );
-        $req = $clone->as_string;
-    }
-
-    my $response = $self->cache->get( $req );
-    if ( $response ) {
-        $response = thaw( $response );
-    }
-
-    if ( $self->_cache_ok( $response ) ) {
-        $self->is_cached( 1 );
-        return $response;
-    }
-
-    $response = $self->SUPER::_make_request( $request, @_ );
-
-    # http://rt.cpan.org/Public/Bug/Display.html?id=42693
-    $response->decode();
-    delete $response->{handlers};
-
-    if ( $self->_cache_ok( $response ) ) {
-        $self->cache->set( $req, freeze( $response ) );
-    }
-
-    return $response;
-}
-
-sub _cache_ok {
-
-    my $self     = shift;
-    my $response = shift;
-
-    return 0 if !$response;
-    return 1 if !$self->positive_cache;
-
-    if ( ( $response->code >= 200 && $response->code < 300 )
-        || $response->code == 301 )
-    {
-        return 1;
-    }
-    return 0;
-
-}
-
-__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
-
-"We miss you, Spoon";    ## no critic
-
