@@ -18,3 +18,4 @@
 ^data\.yaml$
 ^blibdirs$
 README.txt
+.kpf$
