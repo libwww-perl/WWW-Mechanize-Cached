@@ -1,0 +1,151 @@
+NAME
+    WWW::Mechanize::Cached - Cache response to be polite
+
+VERSION
+    version 1.36
+
+SYNOPSIS
+        use WWW::Mechanize::Cached;
+
+        my $cacher = WWW::Mechanize::Cached->new;
+        $cacher->get( $url );
+
+        # or, with your own Cache object
+        use CHI;
+        use WWW::Mechanize::Cached;
+    
+        my $cache = CHI->new(
+            driver   => 'File',
+            root_dir => '/tmp/mech-example'
+        );
+    
+        my $mech = WWW::Mechanize::Cached->new( cache => $cache );
+        $mech->get("http://www.google.com");
+
+DESCRIPTION
+    Uses the Cache::Cache hierarchy to implement a caching Mech. This lets
+    one perform repeated requests without hammering a server impolitely.
+
+    Repository: <http://github.com/oalders/www-mechanize-cached/tree/master>
+
+CONSTRUCTOR
+  new
+    Behaves like, and calls, WWW::Mechanize's "new" method. Any params,
+    other than those explicitly listed here are passed directly to
+    WWW::Mechanize's constructor.
+
+    You may pass in a "cache => $cache_object" if you wish. The
+    *$cache_object* must have "get()" and "set()" methods like the
+    "Cache::Cache" family.
+
+    The default Cache object is set up with the following params:
+
+        my $cache_params = {
+            default_expires_in => "1d", namespace => 'www-mechanize-cached',
+        };
+    
+        $cache = Cache::FileCache->new( $cache_params );
+
+    This should be fine if you only want to use a disk-based cache, you only
+    want to cache results for 1 day and you're not in a shared hosting
+    environment. If any of this presents a problem for you, you should pass
+    in your own Cache object. These defaults will remain unchanged in order
+    to maintain backwards compatibility.
+
+    For example, you may want to try something like this:
+
+        use WWW::Mechanize::Cached;
+        use CHI;
+    
+        my $cache = CHI->new(
+            driver   => 'File',
+            root_dir => '/tmp/mech-example'
+        );
+    
+        my $mech = WWW::Mechanize::Cached->new( cache => $cache );
+        $mech->get("http://www.google.com");
+
+METHODS
+    Most methods are provided by WWW::Mechanize. See that module's
+    documentation for details.
+
+  cache( $cache_object )
+    Requires an caching object which has a get() and a set() method. Using
+    the CHI module to create your cache is the recommended way. See new()
+    for examples.
+
+  is_cached()
+    Returns true if the current page is from the cache, or false if not. If
+    it returns "undef", then you don't have any current request.
+
+  positive_cache( 0|1 )
+    As of version 1.36 positive caching is enabled by default. Up to this
+    point, this module had employed a negative cache, which means it cached
+    404 responses, temporary redirects etc. In most cases, this is not what
+    you want, so the default behaviour now better reflects this. You can
+    revert to the negative cache quite easily:
+
+        # cache everything (404s, all 300s etc)
+        $mech->positive_cache( 0 );
+
+  ref_in_cache_key( 0|1 )
+    Allow the referring URL to be used when creating the cache key. This is
+    off by default. In almost all cases, you will not want to enable this,
+    but it is available to you for reasons of backwards compatibility and
+    giving you enough rope to hang yourself.
+
+    Previous to v1.36 the following was in the "BUGS AND LIMITATIONS"
+    section:
+
+        It may sometimes seem as if it's not caching something. And this may well
+        be true. It uses the HTTP request, in string form, as the key to the cache
+        entries, so any minor changes will result in a different key. This is most
+        noticable when following links as L<WWW::Mechanize> adds a C<Referer>
+        header.
+
+    See RT #56757 for a detailed example of the bugs this functionality can
+    trigger.
+
+THANKS
+    Iain Truskett for writing this in the first place.
+
+SUPPORT
+    You can find documentation for this module with the perldoc command.
+
+        perldoc WWW::Mechanize::Cached
+
+    You can also look for information at:
+
+    *   AnnoCPAN: Annotated CPAN documentation
+
+        <http://annocpan.org/dist/WWW-Mechanize-Cached>
+
+    *   CPAN Ratings
+
+        <http://cpanratings.perl.org/d/WWW-Mechanize-Cached>
+
+    *   RT: CPAN's request tracker
+
+        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Mechanize-Cached>
+
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/WWW-Mechanize-Cached>
+
+PAST AUTHORS
+    Iain Truskett <spoon@cpan.org>
+
+    Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
+
+SEE ALSO
+    WWW::Mechanize.
+
+AUTHOR
+    Olaf Alders <olaf@wundercounter.com> (current maintainer)
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2010 by Iain Truskett and Andy Lester.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+
