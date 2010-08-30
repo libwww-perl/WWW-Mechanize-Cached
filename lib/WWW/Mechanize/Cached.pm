@@ -8,7 +8,7 @@ use Carp qw( carp croak );
 use Storable qw( freeze thaw );
 
 has 'cache'            => ( is => 'rw', );
-has 'is_cached'        => ( is => 'rw', default => 0 );
+has 'is_cached'        => ( is => 'rw', default => undef );
 has 'positive_cache'   => ( is => 'rw', default => 1 );
 has 'ref_in_cache_key' => ( is => 'rw', default => 0 );
 
@@ -99,7 +99,7 @@ returns C<undef>, then you don't have any current request.
 
 =head2 positive_cache( 0|1 )
 
-As of version 1.36 positive caching is enabled by default. Up to this point,
+As of v1.36 positive caching is enabled by default. Up to this point,
 this module had employed a negative cache, which means it cached 404
 responses, temporary redirects etc. In most cases, this is not what you want,
 so the default behaviour now better reflects this. You can revert to the
