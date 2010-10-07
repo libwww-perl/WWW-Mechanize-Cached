@@ -2,7 +2,7 @@ NAME
     WWW::Mechanize::Cached - Cache response to be polite
 
 VERSION
-    version 1.36
+    version 1.38
 
 SYNOPSIS
         use WWW::Mechanize::Cached;
@@ -79,11 +79,11 @@ METHODS
     it returns "undef", then you don't have any current request.
 
   positive_cache( 0|1 )
-    As of version 1.36 positive caching is enabled by default. Up to this
-    point, this module had employed a negative cache, which means it cached
-    404 responses, temporary redirects etc. In most cases, this is not what
-    you want, so the default behaviour now better reflects this. You can
-    revert to the negative cache quite easily:
+    As of v1.36 positive caching is enabled by default. Up to this point,
+    this module had employed a negative cache, which means it cached 404
+    responses, temporary redirects etc. In most cases, this is not what you
+    want, so the default behaviour now better reflects this. You can revert
+    to the negative cache quite easily:
 
         # cache everything (404s, all 300s etc)
         $mech->positive_cache( 0 );
@@ -132,16 +132,15 @@ SUPPORT
 
         <http://search.cpan.org/dist/WWW-Mechanize-Cached>
 
-PAST AUTHORS
-    Iain Truskett <spoon@cpan.org>
-
-    Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
-
 SEE ALSO
     WWW::Mechanize.
 
-AUTHOR
-    Olaf Alders <olaf@wundercounter.com> (current maintainer)
+AUTHORS
+    *   Iain Truskett (original author)
+
+    *   Andy Lester <petdance@cpan.org> (2004 - July 2009)
+
+    *   Olaf Alders <olaf@wundercounter.com> (current maintainer)
 
 COPYRIGHT AND LICENSE
     This software is copyright (c) 2010 by Iain Truskett and Andy Lester.

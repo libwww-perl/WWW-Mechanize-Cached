@@ -1,5 +1,10 @@
 Revision history for Perl extension WWW::Mechanize::Cached
 
+1.38 2010-10-07
+    - cache_key test should now be portable to Windows
+    - Critic test removed as Dist::Zilla runs this test automatically
+    - POD tests should now only be run by author
+
 1.37 2010-08-30
     - Removed TestCache from Makefile.  Had been automatically added
       by Dist::Zilla

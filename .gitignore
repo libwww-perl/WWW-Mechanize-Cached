@@ -1,3 +1,4 @@
 # Komodo project files
 *.kpf
 .build
+WWW-Mechanize-Cached*

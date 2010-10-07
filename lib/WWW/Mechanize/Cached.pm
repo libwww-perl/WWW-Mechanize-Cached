@@ -275,12 +275,6 @@ L<http://search.cpan.org/dist/WWW-Mechanize-Cached>
 
 =back
 
-=head1 PAST AUTHORS
-
-Iain Truskett <spoon@cpan.org>
-
-Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
-
 =head1 SEE ALSO
 
 L<WWW::Mechanize>.
