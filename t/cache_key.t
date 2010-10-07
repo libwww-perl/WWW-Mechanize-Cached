@@ -7,6 +7,7 @@ use warnings;
 use lib 't';
 
 use Find::Lib;
+use File::Spec;
 use Path::Class qw(file);
 use Test::More tests => 64;
 use TestCache;
@@ -50,8 +51,7 @@ sub check_cache {
 sub page_url {
     
     my $i = shift;
-    my $file = file( Find::Lib::base(), 'pages', "$i.html" );
-    return "file://" . $file->stringify;
+    return "file://". File::Spec->catfile(Find::Lib::base(), 'pages', "$i.html");
     
 }
 
