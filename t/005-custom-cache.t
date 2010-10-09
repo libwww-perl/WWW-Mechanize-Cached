@@ -13,11 +13,14 @@ BEGIN {
 my $cache = TestCache->new();
 isa_ok( $cache, 'TestCache' );
 
-my $mech = WWW::Mechanize::Cached->new( cache => $cache, autocheck => 1 );
+my $mech = WWW::Mechanize::Cached->new( cache => $cache, autocheck => 0 );
 isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
 my $first  = $mech->get( URL );
 my $second = $mech->get( URL );
 my $third  = $mech->get( URL );
 
-is( $third->content, "DUMMY", "Went thru my dummy cache" );
+SKIP: {
+    skip "cannot connect to google", 1 unless $mech->success;
+    is( $third->content, "DUMMY", "Went thru my dummy cache" );
+}

@@ -1,5 +1,9 @@
 Revision history for Perl extension WWW::Mechanize::Cached
 
+1.39 2010-10-09
+    - live tests now skip if we can't connect to the live URL
+    - Storable now has a specific version prerequisite
+    
 1.38 2010-10-07
     - cache_key test should now be portable to Windows
     - Critic test removed as Dist::Zilla runs this test automatically
