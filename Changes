@@ -1,5 +1,8 @@
 Revision history for Perl extension WWW::Mechanize::Cached
 
+1.40 2010-10-18
+    - Fixed file prefix in cache_key.t when run under Windows
+
 1.39 2010-10-09
     - live tests now skip if we can't connect to the live URL
     - Storable now has a specific version prerequisite

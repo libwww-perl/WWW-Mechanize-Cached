@@ -51,7 +51,9 @@ sub check_cache {
 sub page_url {
     
     my $i = shift;
-    return "file://". File::Spec->catfile(Find::Lib::base(), 'pages', "$i.html");
+    my $prefix = 'file://';
+    $prefix .= '/' if $^O =~ m{Win};
+    return $prefix . File::Spec->catfile(Find::Lib::base(), 'pages', "$i.html");
     
 }
 
