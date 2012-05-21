@@ -116,12 +116,14 @@ sub _cache_ok {
     return 0 if !$response;
     return 1 if !$self->positive_cache;
 
-    if ( ( $response->code >= 200 && $response->code < 300 )
-        || $response->code == 301 )
-    {
-        return 1;
+    return 0 if  $response->code < 200 ;
+    return 0 if  $response->code > 301 ;
+
+    if ( my $size = $response->header('Content-Length') && $size != length($response->content) ) {
+        $self->warn("Content-Length header did not match contents actual length, not caching (E=WWW_MECH_CACHED_CONTENT)");
+        return 0;
     }
-    return 0;
+    return 1;
 
 }
 
