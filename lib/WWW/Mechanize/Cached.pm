@@ -9,10 +9,14 @@ use Carp qw( carp croak );
 use Data::Dump qw( dump );
 use Storable qw( freeze thaw );
 
-has 'cache'            => ( is => 'rw', );
-has 'is_cached'        => ( is => 'rw', );
-has 'positive_cache'   => ( is => 'rw', );
-has 'ref_in_cache_key' => ( is => 'rw', );
+has 'cache'                         => ( is => 'rw', );
+has 'is_cached'                     => ( is => 'rw', );
+has 'positive_cache'                => ( is => 'rw', );
+has 'ref_in_cache_key'              => ( is => 'rw', );
+has 'cache_undef_content_length'    => ( is => 'rw', );
+has 'cache_zero_content_length'     => ( is => 'rw', );
+has 'cache_mismatch_content_length' => ( is => 'rw', );
+has '_verbose_dwarn'                => ( is => 'rw', );
 
 sub new {
     my $class     = shift;
@@ -31,7 +35,7 @@ sub new {
     }
 
     my %cached_args = %mech_args;
-    
+
     delete $mech_args{ref_in_cache_key};
     delete $mech_args{positive_cache};
 
@@ -47,13 +51,17 @@ sub new {
     }
 
     $self->cache( $cache );
-    
+
     my %defaults = (
-        ref_in_cache_key => 0,
-        positive_cache => 1,
+        ref_in_cache_key              => 0,
+        positive_cache                => 1,
+        cache_undef_content_length    => 0,
+        cache_zero_content_length     => 0,
+        cache_mismatch_content_length => 'warn',
+        _verbose_dwarn                => 0,
     );
-    
-    foreach my $arg ('ref_in_cache_key', 'positive_cache' ) {
+
+    foreach my $arg ( keys %defaults ) {
         if ( exists $cached_args{$arg} ) {
             $self->$arg( $cached_args{$arg} );
         }
@@ -67,7 +75,7 @@ sub new {
 }
 
 sub _make_request {
-    
+
     my $self    = shift;
     my $request = shift;
     my $req     = $request;
@@ -86,10 +94,10 @@ sub _make_request {
     }
 
     my $response = $self->cache->get( $req );
+
     if ( $response ) {
         $response = thaw( $response );
     }
-
     if ( $self->_cache_ok( $response ) ) {
         $self->is_cached( 1 );
         return $response;
@@ -97,15 +105,107 @@ sub _make_request {
 
     $response = $self->SUPER::_make_request( $request, @_ );
 
+    # decode strips some important headers.
+    my $headers = $response->headers->clone;
+
     # http://rt.cpan.org/Public/Bug/Display.html?id=42693
     $response->decode();
     delete $response->{handlers};
 
-    if ( $self->_cache_ok( $response ) ) {
+    if ( $self->_response_cache_ok( $response, $headers ) ) {
         $self->cache->set( $req, freeze( $response ) );
     }
 
     return $response;
+}
+
+sub _dwarn_filter {
+    my ( $ctx, $ref ) = @_;
+    return {
+        hide_keys => [
+            qw( _content cookie content set-cookie handlers cookie_jar cache req res page_stack )
+        ]
+    };
+
+}
+
+sub dwarn {
+    my $self    = shift;
+    my $message = shift;
+
+    return unless my $handler = $self->{onwarn};
+
+    return if $self->quiet;
+
+    if ( $self->_verbose_dwarn ) {
+        my $payload = {
+            self    => $self,
+            message => $message,
+            debug   => \@_,
+        };
+        require Data::Dump;
+        return $handler->( Data::Dump::dumpf( $payload, \&_dwarn_filter ) );
+    }
+    else {
+        return $handler->($message);
+    }
+}
+
+sub _response_cache_ok {
+    my $self     = shift;
+    my $response = shift;
+    my $headers  = shift;
+
+    return 0 if !$response;
+    return 1 if !$self->positive_cache;
+
+    return 0 if $response->code < 200;
+    return 0 if $response->code > 301;
+
+    my $size = $headers->{'content-length'};
+
+    if ( not defined $size ) {
+        if ( $self->cache_undef_content_length . q{} eq q{warn} ) {
+            $self->dwarn(
+                q[Content-Length header was undefined, not caching]
+                  . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
+                $headers
+            );
+            return 0;
+        }
+        if ( $self->cache_undef_content_length == 0 ) {
+            return 0;
+        }
+    }
+
+    if ( defined $size and $size == 0 ) {
+        if ( $self->cache_zero_content_length . q{} eq q{warn} ) {
+            $self->dwarn(
+                q{Content-Length header was 0, not caching}
+                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
+                $headers
+            );
+            return 0;
+        }
+        if ( $self->cache_zero_content_length == 0 ) {
+            return 0;
+        }
+    }
+
+    if (    defined $size
+        and $size != 0
+        and $size != length( $response->content ) )
+    {
+        if ( $self->cache_mismatch_content_length . "" eq "warn" ) {
+            $self->dwarn(
+q{Content-Length header did not match contents actual length, not caching}
+                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
+            return 0;
+        }
+        if ( $self->cache_mismatch_content_length == 0 ) {
+            return 0;
+        }
+    }
 }
 
 sub _cache_ok {
@@ -116,15 +216,10 @@ sub _cache_ok {
     return 0 if !$response;
     return 1 if !$self->positive_cache;
 
-    return 0 if  $response->code < 200 ;
-    return 0 if  $response->code > 301 ;
+    return 0 if $response->code < 200;
+    return 0 if $response->code > 301;
 
-    if ( my $size = $response->header('Content-Length') && $size != length($response->content) ) {
-        $self->warn("Content-Length header did not match contents actual length, not caching (E=WWW_MECH_CACHED_CONTENT)");
-        return 0;
-    }
     return 1;
-
 }
 
 __PACKAGE__->meta->make_immutable( inline_constructor => 0 );
