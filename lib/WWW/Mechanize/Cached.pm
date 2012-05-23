@@ -110,13 +110,13 @@ sub _make_request {
     # decode strips some important headers.
     my $headers = $response->headers->clone;
 
+    my $should_cache = $self->_response_cache_ok( $response, $headers );
+
     # http://rt.cpan.org/Public/Bug/Display.html?id=42693
     $response->decode();
     delete $response->{handlers};
 
-    if ( $self->_response_cache_ok( $response, $headers ) ) {
-        $self->cache->set( $req, freeze( $response ) );
-    }
+    $self->cache->set( $req, freeze( $response ) ) if $should_cache;
 
     return $response;
 }
