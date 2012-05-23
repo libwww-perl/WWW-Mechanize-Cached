@@ -131,7 +131,7 @@ sub _dwarn_filter {
 
 }
 
-sub dwarn {
+sub _dwarn {
     my $self    = shift;
     my $message = shift;
 
@@ -168,7 +168,7 @@ sub _response_cache_ok {
 
     if ( not defined $size ) {
         if ( $self->cache_undef_content_length . q{} eq q{warn} ) {
-            $self->dwarn(
+            $self->_dwarn(
                 q[Content-Length header was undefined, not caching]
                   . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
                 $headers
@@ -182,7 +182,7 @@ sub _response_cache_ok {
 
     if ( defined $size and $size == 0 ) {
         if ( $self->cache_zero_content_length . q{} eq q{warn} ) {
-            $self->dwarn(
+            $self->_dwarn(
                 q{Content-Length header was 0, not caching}
                   . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
                 $headers
@@ -199,7 +199,7 @@ sub _response_cache_ok {
         and $size != length( $response->content ) )
     {
         if ( $self->cache_mismatch_content_length . "" eq "warn" ) {
-            $self->dwarn(
+            $self->_dwarn(
 q{Content-Length header did not match contents actual length, not caching}
                   . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
             return 0;
@@ -343,6 +343,57 @@ Previous to v1.36 the following was in the "BUGS AND LIMITATIONS" section:
 
 See RT #56757 for a detailed example of the bugs this functionality can
 trigger.
+
+=head2 cache_undef_content_length( 0 | 'warn' | 1 )
+
+This is configuration option which adjusts how caching behaviour performs when
+the Content-Length header is not specified by the server.
+
+Default behaviour is 0, which is not to cache.
+
+Setting this value to 1, will cache pages even if the Content-Length header is
+missing, which was the default behaviour prior to the addition of this feature.
+
+And thirdly, you can set the value to the string 'warn', to warn if this
+scenario occurs, and then not cache it.
+
+=head2 cache_zero_content_length( 0 | 'warn' | 1 )
+
+This is configuration option which adjusts how caching behaviour performs when
+the Content-Length header is equal to 0.
+
+Default behaviour is 0, which is not to cache.
+
+Setting this value to 1, will cache pages even if the Content-Length header is
+0, which was the default behaviour prior to the addition of this feature.
+
+And thirdly, you can set the value to the string 'warn', to warn if this
+scenario occurs, and then not cache it.
+
+=head2 cache_mismatch_content_length( 0 | 'warn' | 1 )
+
+This is configuration option which adjusts how caching behaviour performs when
+the Content-Length header is equal to 0.
+
+Setting this value to 0, will silenly not cache pages with a Content-Length
+mismatch.
+
+Setting this value to 1, will cache pages even if the Content-Length header is
+0, which was the default behaviour prior to the addition of this feature.
+
+And thirdly, you can set the value to the string 'warn', to warn if this
+scenario occurs, and then not cache it. ( This is the default behaviour )
+
+=head1 UPGRADING FROM 1.40 OR EARLIER
+
+Caching behaviour has changed since 1.40, and this may result in pages that were
+previously cached start failing to cache, and in some cases, emit warnings.
+
+To return to the 1.40 behaviour:
+
+	$mech->cache_undef_content_length(1);  # Default is 0
+	$mech->cache_zero_content_length(1);   # Default is 0
+	$mech->cache_mismatch_content_length(1); # Default is 'warn'
 
 =head1 THANKS
 
