@@ -373,13 +373,15 @@ scenario occurs, and then not cache it.
 =head2 cache_mismatch_content_length( 0 | 'warn' | 1 )
 
 This is configuration option which adjusts how caching behaviour performs when
-the Content-Length header is equal to 0.
+the Content-Length header differs from the length of the content itself. ( Which
+usually indicates a transmission error )
 
 Setting this value to 0, will silenly not cache pages with a Content-Length
 mismatch.
 
-Setting this value to 1, will cache pages even if the Content-Length header is
-0, which was the default behaviour prior to the addition of this feature.
+Setting this value to 1, will cache pages even if the Content-Length header
+conflicts with the content length, which was the default behaviour prior to the
+addition of this feature.
 
 And thirdly, you can set the value to the string 'warn', to warn if this
 scenario occurs, and then not cache it. ( This is the default behaviour )
