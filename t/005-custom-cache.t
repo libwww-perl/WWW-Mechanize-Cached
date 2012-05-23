@@ -33,7 +33,7 @@ BEGIN {
 my $cache = TestCache->new();
 isa_ok( $cache, 'TestCache' );
 
-my $mech = WWW::Mechanize::Cached->new( cache => $cache, autocheck => 0 );
+my $mech = WWW::Mechanize::Cached->new( cache => $cache, autocheck => 0, _verbose_dwarn => 1);
 isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
 my $first  = $mech->get( URL );

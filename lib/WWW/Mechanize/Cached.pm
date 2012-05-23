@@ -36,8 +36,18 @@ sub new {
 
     my %cached_args = %mech_args;
 
-    delete $mech_args{ref_in_cache_key};
-    delete $mech_args{positive_cache};
+    my %defaults = (
+        ref_in_cache_key              => 0,
+        positive_cache                => 1,
+        cache_undef_content_length    => 0,
+        cache_zero_content_length     => 0,
+        cache_mismatch_content_length => 'warn',
+        _verbose_dwarn                => 0,
+    );
+
+    for my $key ( keys %defaults ) {
+        delete $mech_args{$key};
+    }
 
     my $self = $class->SUPER::new( %mech_args );
 
@@ -52,14 +62,6 @@ sub new {
 
     $self->cache( $cache );
 
-    my %defaults = (
-        ref_in_cache_key              => 0,
-        positive_cache                => 1,
-        cache_undef_content_length    => 0,
-        cache_zero_content_length     => 0,
-        cache_mismatch_content_length => 'warn',
-        _verbose_dwarn                => 0,
-    );
 
     foreach my $arg ( keys %defaults ) {
         if ( exists $cached_args{$arg} ) {
@@ -206,6 +208,8 @@ q{Content-Length header did not match contents actual length, not caching}
             return 0;
         }
     }
+
+    return 1;
 }
 
 sub _cache_ok {
