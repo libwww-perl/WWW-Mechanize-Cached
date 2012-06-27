@@ -19,7 +19,7 @@ BEGIN {
 my $cache = TestCache->new();
 isa_ok( $cache, 'TestCache' );
 
-my $mech = WWW::Mechanize::Cached->new( cache => $cache, autocheck => 1 );
+my $mech = WWW::Mechanize::Cached->new( cache => $cache, autocheck => 1, );
 isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
 ok( !$mech->ref_in_cache_key, "Referring URLs in cache key disabled by default" );
