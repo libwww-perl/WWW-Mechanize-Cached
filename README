@@ -2,7 +2,7 @@ NAME
     WWW::Mechanize::Cached - Cache response to be polite
 
 VERSION
-    version 1.40
+    version 1.41
 
 SYNOPSIS
         use WWW::Mechanize::Cached;
@@ -13,20 +13,22 @@ SYNOPSIS
         # or, with your own Cache object
         use CHI;
         use WWW::Mechanize::Cached;
-    
+
         my $cache = CHI->new(
             driver   => 'File',
             root_dir => '/tmp/mech-example'
         );
-    
+
         my $mech = WWW::Mechanize::Cached->new( cache => $cache );
-        $mech->get("http://www.google.com");
+        $mech->get("http://www.wikipedia.org");
 
 DESCRIPTION
-    Uses the Cache::Cache hierarchy to implement a caching Mech. This lets
-    one perform repeated requests without hammering a server impolitely.
-
-    Repository: <http://github.com/oalders/www-mechanize-cached/tree/master>
+    Uses the Cache::Cache hierarchy by default to implement a caching Mech.
+    This lets one perform repeated requests without hammering a server
+    impolitely. Please note that Cache::Cache has been superceded by CHI,
+    but the default has not been changed here for reasons of backwards
+    compatibility. For this reason, you are encouraged to provide your own
+    CHI caching object to override the default.
 
 CONSTRUCTOR
   new
@@ -43,7 +45,7 @@ CONSTRUCTOR
         my $cache_params = {
             default_expires_in => "1d", namespace => 'www-mechanize-cached',
         };
-    
+
         $cache = Cache::FileCache->new( $cache_params );
 
     This should be fine if you only want to use a disk-based cache, you only
@@ -56,14 +58,14 @@ CONSTRUCTOR
 
         use WWW::Mechanize::Cached;
         use CHI;
-    
+
         my $cache = CHI->new(
             driver   => 'File',
             root_dir => '/tmp/mech-example'
         );
-    
+
         my $mech = WWW::Mechanize::Cached->new( cache => $cache );
-        $mech->get("http://www.google.com");
+        $mech->get("http://www.wikipedia.org");
 
 METHODS
     Most methods are provided by WWW::Mechanize. See that module's
@@ -106,34 +108,75 @@ METHODS
     See RT #56757 for a detailed example of the bugs this functionality can
     trigger.
 
+  cache_undef_content_length( 0 | 'warn' | 1 )
+    This is configuration option which adjusts how caching behaviour
+    performs when the Content-Length header is not specified by the server.
+
+    Default behaviour is 0, which is not to cache.
+
+    Setting this value to 1, will cache pages even if the Content-Length
+    header is missing, which was the default behaviour prior to the addition
+    of this feature.
+
+    And thirdly, you can set the value to the string 'warn', to warn if this
+    scenario occurs, and then not cache it.
+
+  cache_zero_content_length( 0 | 'warn' | 1 )
+    This is configuration option which adjusts how caching behaviour
+    performs when the Content-Length header is equal to 0.
+
+    Default behaviour is 0, which is not to cache.
+
+    Setting this value to 1, will cache pages even if the Content-Length
+    header is 0, which was the default behaviour prior to the addition of
+    this feature.
+
+    And thirdly, you can set the value to the string 'warn', to warn if this
+    scenario occurs, and then not cache it.
+
+  cache_mismatch_content_length( 0 | 'warn' | 1 )
+    This is configuration option which adjusts how caching behaviour
+    performs when the Content-Length header differs from the length of the
+    content itself. ( Which usually indicates a transmission error )
+
+    Setting this value to 0, will silenly not cache pages with a
+    Content-Length mismatch.
+
+    Setting this value to 1, will cache pages even if the Content-Length
+    header conflicts with the content length, which was the default
+    behaviour prior to the addition of this feature.
+
+    And thirdly, you can set the value to the string 'warn', to warn if this
+    scenario occurs, and then not cache it. ( This is the default behaviour
+    )
+
+UPGRADING FROM 1.40 OR EARLIER
+    Caching behaviour has changed since 1.40, and this may result in pages
+    that were previously cached start failing to cache, and in some cases,
+    emit warnings.
+
+    To return to the 1.40 behaviour:
+
+            $mech->cache_undef_content_length(1);  # Default is 0
+            $mech->cache_zero_content_length(1);   # Default is 0
+            $mech->cache_mismatch_content_length(1); # Default is 'warn'
+
 THANKS
-    Iain Truskett for writing this in the first place.
+    Iain Truskett for writing this in the first place. Andy Lester for
+    graciously handing over maintainership. Kent Fredric for adding content
+    length handling.
 
 SUPPORT
     You can find documentation for this module with the perldoc command.
 
         perldoc WWW::Mechanize::Cached
 
-    You can also look for information at:
-
-    *   AnnoCPAN: Annotated CPAN documentation
-
-        <http://annocpan.org/dist/WWW-Mechanize-Cached>
-
-    *   CPAN Ratings
-
-        <http://cpanratings.perl.org/d/WWW-Mechanize-Cached>
-
-    *   RT: CPAN's request tracker
-
-        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Mechanize-Cached>
-
     *   Search CPAN
 
-        <http://search.cpan.org/dist/WWW-Mechanize-Cached>
+        <https://metacpan.org/module/WWW::Mechanize::Cached>
 
 SEE ALSO
-    WWW::Mechanize.
+    WWW::Mechanize, WWW::Mechanize::Cached::GZip.
 
 AUTHORS
     *   Iain Truskett (original author)
@@ -143,7 +186,7 @@ AUTHORS
     *   Olaf Alders <olaf@wundercounter.com> (current maintainer)
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2010 by Iain Truskett and Andy Lester.
+    This software is copyright (c) 2012 by Iain Truskett and Andy Lester.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.

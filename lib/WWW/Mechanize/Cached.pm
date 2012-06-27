@@ -24,7 +24,7 @@ sub new {
 
     my $cache = delete $mech_args{cache};
     if ( $cache ) {
-        my $ok 
+        my $ok
             = ( ref( $cache ) ne "HASH" )
             && $cache->can( "get" )
             && $cache->can( "set" );
@@ -242,22 +242,24 @@ __PACKAGE__->meta->make_immutable( inline_constructor => 0 );
     # or, with your own Cache object
     use CHI;
     use WWW::Mechanize::Cached;
-    
+
     my $cache = CHI->new(
         driver   => 'File',
         root_dir => '/tmp/mech-example'
     );
-    
+
     my $mech = WWW::Mechanize::Cached->new( cache => $cache );
-    $mech->get("http://www.google.com");
-    
+    $mech->get("http://www.wikipedia.org");
+
 
 =head1 DESCRIPTION
 
-Uses the L<Cache::Cache> hierarchy to implement a caching Mech. This lets one
-perform repeated requests without hammering a server impolitely.
-
-Repository: L<http://github.com/oalders/www-mechanize-cached/tree/master>
+Uses the L<Cache::Cache> hierarchy by default to implement a caching Mech. This
+lets one perform repeated requests without hammering a server impolitely.
+Please note that L<Cache::Cache> has been superceded by L<CHI>, but the default
+has not been changed here for reasons of backwards compatibility.  For this
+reason, you are encouraged to provide your own L<CHI> caching object to
+override the default.
 
 =head1 CONSTRUCTOR
 
@@ -276,28 +278,28 @@ The default Cache object is set up with the following params:
     my $cache_params = {
         default_expires_in => "1d", namespace => 'www-mechanize-cached',
     };
-    
+
     $cache = Cache::FileCache->new( $cache_params );
-    
-    
+
+
 This should be fine if you only want to use a disk-based cache, you only want
 to cache results for 1 day and you're not in a shared hosting environment.
 If any of this presents a problem for you, you should pass in your own Cache
 object.  These defaults will remain unchanged in order to maintain backwards
-compatibility.  
+compatibility.
 
 For example, you may want to try something like this:
 
     use WWW::Mechanize::Cached;
     use CHI;
-    
+
     my $cache = CHI->new(
         driver   => 'File',
         root_dir => '/tmp/mech-example'
     );
-    
+
     my $mech = WWW::Mechanize::Cached->new( cache => $cache );
-    $mech->get("http://www.google.com");
+    $mech->get("http://www.wikipedia.org");
 
 
 =head1 METHODS
@@ -325,13 +327,13 @@ negative cache quite easily:
 
     # cache everything (404s, all 300s etc)
     $mech->positive_cache( 0 );
-    
+
 =head2 ref_in_cache_key( 0|1 )
 
 Allow the referring URL to be used when creating the cache key.  This is off
 by default.  In almost all cases, you will not want to enable this, but it is
 available to you for reasons of backwards compatibility and giving you enough
-rope to hang yourself.  
+rope to hang yourself.
 
 Previous to v1.36 the following was in the "BUGS AND LIMITATIONS" section:
 
@@ -400,6 +402,8 @@ To return to the 1.40 behaviour:
 =head1 THANKS
 
 Iain Truskett for writing this in the first place.
+Andy Lester for graciously handing over maintainership.
+Kent Fredric for adding content length handling.
 
 =head1 SUPPORT
 
@@ -407,30 +411,16 @@ You can find documentation for this module with the perldoc command.
 
     perldoc WWW::Mechanize::Cached
 
-You can also look for information at:
-
-=over 4
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/WWW-Mechanize-Cached>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/WWW-Mechanize-Cached>
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Mechanize-Cached>
+=over
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/WWW-Mechanize-Cached>
+L<https://metacpan.org/module/WWW::Mechanize::Cached>
 
 =back
 
 =head1 SEE ALSO
 
-L<WWW::Mechanize>.
+L<WWW::Mechanize>, L<WWW::Mechanize::Cached::GZip>.
 
 =cut
