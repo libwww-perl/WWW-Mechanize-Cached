@@ -164,6 +164,18 @@ sub _response_cache_ok {
     return 0 if $response->code < 200;
     return 0 if $response->code > 301;
 
+    if ( exists $headers->{'client-transfer-encoding'} ) {
+        for my $cte ( @{ $headers->{'client-transfer-encoding'} } ){
+            # Transfer-Encoding = chunked means document consistency
+            # is independent of Content-Length value,
+            # and that Content-Length can be safely ignored.
+            # Its not obvious how the lower levels represent a
+            # failed chuncked-transfer yet.
+            # But its safe to say relying on content-length proves pointless.
+            return 1 if $cte eq 'chunked';
+        }
+    }
+
     my $size = $headers->{'content-length'};
 
     if ( not defined $size ) {
