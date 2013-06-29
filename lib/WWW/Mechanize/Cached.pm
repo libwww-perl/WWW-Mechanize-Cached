@@ -62,7 +62,6 @@ sub new {
 
     $self->cache( $cache );
 
-
     foreach my $arg ( keys %defaults ) {
         if ( exists $cached_args{$arg} ) {
             $self->$arg( $cached_args{$arg} );
@@ -149,7 +148,7 @@ sub _dwarn {
         return $handler->( Data::Dump::dumpf( $payload, \&_dwarn_filter ) );
     }
     else {
-        return $handler->($message);
+        return $handler->( $message );
     }
 }
 
@@ -165,7 +164,8 @@ sub _response_cache_ok {
     return 0 if $response->code > 301;
 
     if ( exists $headers->{'client-transfer-encoding'} ) {
-        for my $cte ( @{ $headers->{'client-transfer-encoding'} } ){
+        for my $cte ( @{ $headers->{'client-transfer-encoding'} } ) {
+
             # Transfer-Encoding = chunked means document consistency
             # is independent of Content-Length value,
             # and that Content-Length can be safely ignored.
@@ -182,7 +182,7 @@ sub _response_cache_ok {
         if ( $self->cache_undef_content_length . q{} eq q{warn} ) {
             $self->_dwarn(
                 q[Content-Length header was undefined, not caching]
-                  . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
+                    . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
                 $headers
             );
             return 0;
@@ -196,7 +196,7 @@ sub _response_cache_ok {
         if ( $self->cache_zero_content_length . q{} eq q{warn} ) {
             $self->_dwarn(
                 q{Content-Length header was 0, not caching}
-                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
+                    . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
                 $headers
             );
             return 0;
@@ -212,8 +212,8 @@ sub _response_cache_ok {
     {
         if ( $self->cache_mismatch_content_length . "" eq "warn" ) {
             $self->_dwarn(
-q{Content-Length header did not match contents actual length, not caching}
-                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
+                q{Content-Length header did not match contents actual length, not caching}
+                    . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
             return 0;
         }
         if ( $self->cache_mismatch_content_length == 0 ) {
