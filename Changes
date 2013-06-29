@@ -1,5 +1,9 @@
 Revision history for Perl extension WWW::Mechanize::Cached
 
+1.42 2013-06-29
+    - Allow caching w/ Content-Encoding == chunked + no size header (Kent
+      Fredric)
+
 1.41 2012-06-27
     - Account for content length when deciding whether to cache (Kent Fredric)
 

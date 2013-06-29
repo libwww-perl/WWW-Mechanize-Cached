@@ -2,7 +2,7 @@ NAME
     WWW::Mechanize::Cached - Cache response to be polite
 
 VERSION
-    version 1.41
+    version 1.42
 
 SYNOPSIS
         use WWW::Mechanize::Cached;
@@ -186,7 +186,7 @@ AUTHORS
     *   Olaf Alders <olaf@wundercounter.com> (current maintainer)
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2012 by Iain Truskett and Andy Lester.
+    This software is copyright (c) 2013 by Iain Truskett and Andy Lester.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
