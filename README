@@ -2,7 +2,7 @@ NAME
     WWW::Mechanize::Cached - Cache response to be polite
 
 VERSION
-    version 1.42
+    version 1.43
 
 SYNOPSIS
         use WWW::Mechanize::Cached;
