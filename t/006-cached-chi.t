@@ -3,7 +3,7 @@
 use strict;
 use warnings FATAL => 'all';
 use Test::More tests => 14;
-use Test::Requires 'Cache::FileCache';
+use Test::Requires 'CHI';
 
 # Google is a poor choice for this set of tests, as the main page google.com redirects, and the page it redirects
 # to specifies "do not cache", and doesn't return a content-length.
@@ -35,13 +35,14 @@ my $SITE=SITE();
 my $stashpage;
 my $secs = time; # Handy string that will be different between runs
 my $cache_parms = {
+    driver => "File",
     namespace => "www-mechanize-cached-$secs",
     default_expires_in => "1d",
 };
 
 FIRST_CACHE: {
-    my $cache = Cache::FileCache->new( $cache_parms );
-    isa_ok( $cache, 'Cache::FileCache' );
+    my $cache = CHI->new( %{$cache_parms} );
+    isa_ok( $cache, 'CHI::Driver' );
 
     my $mech = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache, );
     isa_ok( $mech, 'WWW::Mechanize::Cached' );
@@ -70,8 +71,8 @@ FIRST_CACHE: {
 
 
 SECOND_CACHE: {
-    my $cache = Cache::FileCache->new( $cache_parms );
-    isa_ok( $cache, 'Cache::FileCache' );
+    my $cache = CHI->new( %{$cache_parms} );
+    isa_ok( $cache, 'CHI::Driver' );
 
     my $mech = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache );
     isa_ok( $mech, 'WWW::Mechanize::Cached' );
