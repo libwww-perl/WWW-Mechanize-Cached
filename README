@@ -2,7 +2,7 @@ NAME
     WWW::Mechanize::Cached - Cache response to be polite
 
 VERSION
-    version 1.43
+    version 1.44
 
 SYNOPSIS
         use WWW::Mechanize::Cached;
@@ -157,9 +157,9 @@ UPGRADING FROM 1.40 OR EARLIER
 
     To return to the 1.40 behaviour:
 
-            $mech->cache_undef_content_length(1);  # Default is 0
-            $mech->cache_zero_content_length(1);   # Default is 0
-            $mech->cache_mismatch_content_length(1); # Default is 'warn'
+        $mech->cache_undef_content_length(1);  # Default is 0
+        $mech->cache_zero_content_length(1);   # Default is 0
+        $mech->cache_mismatch_content_length(1); # Default is 'warn'
 
 THANKS
     Iain Truskett for writing this in the first place. Andy Lester for

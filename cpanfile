@@ -1,9 +1,11 @@
+requires "CHI" => "0";
 requires "Cache::FileCache" => "0";
 requires "Carp" => "0";
 requires "Data::Dump" => "0";
 requires "Moose" => "0";
 requires "Storable" => "2.21";
 requires "WWW::Mechanize" => "0";
+requires "perl" => "5.006";
 requires "strict" => "0";
 requires "warnings" => "0";
 
@@ -17,6 +19,7 @@ on 'test' => sub {
   requires "HTTP::Request" => "0";
   requires "Path::Class" => "0";
   requires "Test::More" => "0";
+  requires "Test::Requires" => "0";
   requires "constant" => "0";
   requires "lib" => "0";
   requires "vars" => "0";
