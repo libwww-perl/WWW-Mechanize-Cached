@@ -3,8 +3,11 @@ use warnings FATAL => 'all';
 
 package WWW::Mechanize::Cached;
 
+use 5.006;
+
 use Moose;
 extends 'WWW::Mechanize';
+
 use Carp qw( carp croak );
 use Data::Dump qw( dump );
 use Storable qw( freeze thaw );
@@ -420,9 +423,9 @@ previously cached start failing to cache, and in some cases, emit warnings.
 
 To return to the 1.40 behaviour:
 
-	$mech->cache_undef_content_length(1);  # Default is 0
-	$mech->cache_zero_content_length(1);   # Default is 0
-	$mech->cache_mismatch_content_length(1); # Default is 'warn'
+    $mech->cache_undef_content_length(1);  # Default is 0
+    $mech->cache_zero_content_length(1);   # Default is 0
+    $mech->cache_mismatch_content_length(1); # Default is 'warn'
 
 =head1 THANKS
 
