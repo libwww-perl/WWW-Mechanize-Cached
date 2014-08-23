@@ -52,12 +52,25 @@ sub new {
     my $self = $class->SUPER::new( %mech_args );
 
     if ( !$cache ) {
-        require Cache::FileCache;
-        my $cache_params = {
-            default_expires_in => "1d",
-            namespace          => 'www-mechanize-cached',
-        };
-        $cache = Cache::FileCache->new( $cache_params );
+        local $@;
+        if ( eval { require Cache::FileCache; 1 } ) {
+          my $cache_params = {
+              default_expires_in => "1d",
+              namespace          => 'www-mechanize-cached',
+          };
+          $cache = Cache::FileCache->new( $cache_params );
+        } elsif ( eval { require CHI; 1 } ) {
+          my $cache_params = {
+            driver => 'File',
+            expires_in => '1d',
+            namespace => 'www-mechanize-cached',
+          };
+          $cache = CHI->new( %$cache_params );
+        } else {
+          croak("Could not create a default cache." .
+            "Please make sure either CHI or Cache::FileCache are installed or configure manually as appropriate"
+          );
+        }
     }
 
     $self->cache( $cache );
