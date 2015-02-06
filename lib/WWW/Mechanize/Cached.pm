@@ -101,7 +101,8 @@ sub _make_request {
 
     # An odd line to need.
     # No idea what purpose this serves?  OALDERS
-    $self->{proxy} = {} unless defined $self->{proxy};
+    $self->{proxy} = {}
+        unless defined $self->{proxy}; ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
 
     # RT #56757
     if ( !$self->ref_in_cache_key ) {
@@ -129,7 +130,7 @@ sub _make_request {
 
     # http://rt.cpan.org/Public/Bug/Display.html?id=42693
     $response->decode();
-    delete $response->{handlers};
+    delete $response->{handlers}; ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
 
     $self->cache->set( $req, freeze( $response ) ) if $should_cache;
 
@@ -150,7 +151,8 @@ sub _dwarn {
     my $self    = shift;
     my $message = shift;
 
-    return unless my $handler = $self->{onwarn};
+    return unless my $handler
+        = $self->{onwarn}; ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
 
     return if $self->quiet;
 
@@ -179,20 +181,24 @@ sub _response_cache_ok {
     return 0 if $response->code < 200;
     return 0 if $response->code > 301;
 
-    if ( exists $headers->{'client-transfer-encoding'} ) {
-        for my $cte ( @{ $headers->{'client-transfer-encoding'} } ) {
+    my $size;
+    {
+        ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
+        if ( exists $headers->{'client-transfer-encoding'} ) {
+            for my $cte ( @{ $headers->{'client-transfer-encoding'} } ) {
 
-            # Transfer-Encoding = chunked means document consistency
-            # is independent of Content-Length value,
-            # and that Content-Length can be safely ignored.
-            # Its not obvious how the lower levels represent a
-            # failed chuncked-transfer yet.
-            # But its safe to say relying on content-length proves pointless.
-            return 1 if $cte eq 'chunked';
+                # Transfer-Encoding = chunked means document consistency
+                # is independent of Content-Length value,
+                # and that Content-Length can be safely ignored.
+                # Its not obvious how the lower levels represent a
+                # failed chuncked-transfer yet.
+                # But its safe to say relying on content-length proves pointless.
+                return 1 if $cte eq 'chunked';
+            }
         }
-    }
 
-    my $size = $headers->{'content-length'};
+        $size = $headers->{'content-length'};
+    }
 
     if ( not defined $size ) {
         if ( $self->cache_undef_content_length . q{} eq q{warn} ) {
