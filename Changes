@@ -1,6 +1,8 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+
+1.45 2015-02-07 18:16:43 America/Toronto
     - Ported from Moose to Moo (Mark Gardner)
 
 1.44 2014-08-23 11:25:15 America/Toronto
