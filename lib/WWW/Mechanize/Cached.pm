@@ -69,9 +69,7 @@ sub _make_request {
 
     # An odd line to need.
     # No idea what purpose this serves?  OALDERS
-    $self->{proxy} = {}
-      unless defined $self->{proxy}
-      ;    ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
+    $self->{proxy} = {} unless defined $self->{proxy};    ## no critic
 
     # RT #56757
     if ( !$self->ref_in_cache_key ) {
@@ -120,9 +118,7 @@ sub _dwarn {
     my $self    = shift;
     my $message = shift;
 
-    return
-      unless my $handler = $self->{onwarn}
-      ;    ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
+    return unless my $handler = $self->{onwarn};    ## no critic
 
     return if $self->quiet;
 
