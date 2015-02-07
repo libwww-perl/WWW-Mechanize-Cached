@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 use strict;
-use warnings FATAL => 'all';
+use warnings FATAL   => 'all';
 use Test::More tests => 2;
 use vars qw( $class );
 

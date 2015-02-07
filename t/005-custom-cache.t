@@ -21,24 +21,29 @@ use Test::More tests => 4;
 #< Date: Wed, 23 May 2012 10:09:55 GMT
 #< Expires: -1
 #< Cache-Control: private, max-age=0
-use constant URL => 'http://www.wikipedia.org';
+use constant URL  => 'http://www.wikipedia.org';
 use constant SITE => 'Wikipedia';
 use TestCache;
 
-my $SITE=SITE();
+my $SITE = SITE();
+
 BEGIN {
-    use_ok( 'WWW::Mechanize::Cached' );
+    use_ok('WWW::Mechanize::Cached');
 }
 
 my $cache = TestCache->new();
 isa_ok( $cache, 'TestCache' );
 
-my $mech = WWW::Mechanize::Cached->new( cache => $cache, autocheck => 0, _verbose_dwarn => 1);
+my $mech = WWW::Mechanize::Cached->new(
+    cache          => $cache,
+    autocheck      => 0,
+    _verbose_dwarn => 1
+);
 isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
-my $first  = $mech->get( URL );
-my $second = $mech->get( URL );
-my $third  = $mech->get( URL );
+my $first  = $mech->get(URL);
+my $second = $mech->get(URL);
+my $third  = $mech->get(URL);
 
 SKIP: {
     skip "cannot connect to $SITE", 1 unless $mech->success;
