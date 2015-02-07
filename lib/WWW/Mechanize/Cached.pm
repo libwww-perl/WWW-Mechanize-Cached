@@ -15,17 +15,18 @@ use Carp qw( carp croak );
 use Data::Dump qw( dump );
 use Storable qw( freeze thaw );
 
-has is_cached        => ( is => 'rw', isa => Maybe[Bool], default => undef );
+has is_cached => ( is => 'rw', isa => Maybe [Bool], default => undef );
 has positive_cache   => ( is => 'rw', isa => Bool, default => 1 );
 has ref_in_cache_key => ( is => 'rw', isa => Bool, default => 0 );
 has _verbose_dwarn   => ( is => 'rw', isa => Bool, default => 0 );
 
 for (qw(cache_undef_content_length cache_zero_content_length)) {
-    has $_ => ( is => 'rw', isa => AnyOf[ Bool, Enum['warn'] ], default => 0 );
+    has $_ =>
+      ( is => 'rw', isa => AnyOf [ Bool, Enum ['warn'] ], default => 0 );
 }
 has cache_mismatch_content_length => (
     is      => 'rw',
-    isa     => AnyOf[ Bool, Enum['warn'] ],
+    isa     => AnyOf [ Bool, Enum ['warn'] ],
     default => 'warn',
 );
 
@@ -33,9 +34,9 @@ has cache => ( is => 'lazy', isa => \&_isa_warn_cache );
 
 sub _isa_warn_cache {
     return
-        if 'HASH' ne ref $_[0]
-        and $_[0]->can('get')
-        and $_[0]->can('set');
+          if 'HASH' ne ref $_[0]
+      and $_[0]->can('get')
+      and $_[0]->can('set');
     carp 'The cache param must be an initialized cache object';
     $_[0] = undef;
 }
@@ -48,13 +49,14 @@ sub _build_cache {
         namespace          => 'www-mechanize-cached',
     ) if try_load_class 'Cache::FileCache';
     return CHI->new(
-        driver => 'File',
+        driver     => 'File',
         expires_in => '1d',
-        namespace => 'www-mechanize-cached',
+        namespace  => 'www-mechanize-cached',
     ) if try_load_class 'CHI';
 
-    croak('Could not create a default cache.' .
-        'Please make sure either CHI or Cache::FileCache are installed or configure manually as appropriate');
+    croak(  'Could not create a default cache.'
+          . 'Please make sure either CHI or Cache::FileCache are installed or configure manually as appropriate'
+    );
 }
 
 sub _make_request {
@@ -63,12 +65,13 @@ sub _make_request {
     my $request = shift;
     my $req     = $request;
 
-    $self->is_cached( 0 );
+    $self->is_cached(0);
 
     # An odd line to need.
     # No idea what purpose this serves?  OALDERS
     $self->{proxy} = {}
-        unless defined $self->{proxy}; ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
+      unless defined $self->{proxy}
+      ;    ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
 
     # RT #56757
     if ( !$self->ref_in_cache_key ) {
@@ -77,13 +80,13 @@ sub _make_request {
         $req = $clone->as_string;
     }
 
-    my $response = $self->cache->get( $req );
+    my $response = $self->cache->get($req);
 
-    if ( $response ) {
-        $response = thaw( $response );
+    if ($response) {
+        $response = thaw($response);
     }
-    if ( $self->_cache_ok( $response ) ) {
-        $self->is_cached( 1 );
+    if ( $self->_cache_ok($response) ) {
+        $self->is_cached(1);
         return $response;
     }
 
@@ -96,9 +99,9 @@ sub _make_request {
 
     # http://rt.cpan.org/Public/Bug/Display.html?id=42693
     $response->decode();
-    delete $response->{handlers}; ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
+    delete $response->{handlers};    ## no critic
 
-    $self->cache->set( $req, freeze( $response ) ) if $should_cache;
+    $self->cache->set( $req, freeze($response) ) if $should_cache;
 
     return $response;
 }
@@ -117,8 +120,9 @@ sub _dwarn {
     my $self    = shift;
     my $message = shift;
 
-    return unless my $handler
-        = $self->{onwarn}; ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
+    return
+      unless my $handler = $self->{onwarn}
+      ;    ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
 
     return if $self->quiet;
 
@@ -132,7 +136,7 @@ sub _dwarn {
         return $handler->( Data::Dump::dumpf( $payload, \&_dwarn_filter ) );
     }
     else {
-        return $handler->( $message );
+        return $handler->($message);
     }
 }
 
@@ -153,12 +157,12 @@ sub _response_cache_ok {
         if ( exists $headers->{'client-transfer-encoding'} ) {
             for my $cte ( @{ $headers->{'client-transfer-encoding'} } ) {
 
-                # Transfer-Encoding = chunked means document consistency
-                # is independent of Content-Length value,
-                # and that Content-Length can be safely ignored.
-                # Its not obvious how the lower levels represent a
-                # failed chuncked-transfer yet.
-                # But its safe to say relying on content-length proves pointless.
+               # Transfer-Encoding = chunked means document consistency
+               # is independent of Content-Length value,
+               # and that Content-Length can be safely ignored.
+               # Its not obvious how the lower levels represent a
+               # failed chuncked-transfer yet.
+               # But its safe to say relying on content-length proves pointless.
                 return 1 if $cte eq 'chunked';
             }
         }
@@ -170,7 +174,7 @@ sub _response_cache_ok {
         if ( $self->cache_undef_content_length . q{} eq q{warn} ) {
             $self->_dwarn(
                 q[Content-Length header was undefined, not caching]
-                    . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
+                  . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
                 $headers
             );
             return 0;
@@ -184,7 +188,7 @@ sub _response_cache_ok {
         if ( $self->cache_zero_content_length . q{} eq q{warn} ) {
             $self->_dwarn(
                 q{Content-Length header was 0, not caching}
-                    . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
+                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
                 $headers
             );
             return 0;
@@ -200,8 +204,8 @@ sub _response_cache_ok {
     {
         if ( $self->cache_mismatch_content_length . "" eq "warn" ) {
             $self->_dwarn(
-                q{Content-Length header did not match contents actual length, not caching}
-                    . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
+q{Content-Length header did not match contents actual length, not caching}
+                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
             return 0;
         }
         if ( $self->cache_mismatch_content_length == 0 ) {

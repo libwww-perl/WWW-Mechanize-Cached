@@ -13,18 +13,18 @@ sub new {
 }
 
 sub set {
-    my $self = shift;
-    my $key = shift;
-    my $value = shift; # an HTTP::Response
+    my $self  = shift;
+    my $key   = shift;
+    my $value = shift;    # an HTTP::Response
 
-    my $res = thaw( $value );
-    $res->content( "DUMMY" );
+    my $res = thaw($value);
+    $res->content("DUMMY");
     $self->{$key} = freeze($res);
 }
 
 sub get {
     my $self = shift;
-    my $key = shift;
+    my $key  = shift;
 
     return $self->{$key};
 }

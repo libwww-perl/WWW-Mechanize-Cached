@@ -6,7 +6,7 @@ use warnings;
 use Test::More tests => 2;
 
 BEGIN {
-    use_ok( 'WWW::Mechanize::Cached' );
+    use_ok('WWW::Mechanize::Cached');
 }
 
 my $mech = WWW::Mechanize::Cached->new;
