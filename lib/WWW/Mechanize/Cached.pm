@@ -7,7 +7,7 @@ use 5.006;
 
 use Class::Load 'try_load_class';
 use Moo;
-use MooX::Types::MooseLike::Base qw(AllOf AnyOf Bool Enum HasMethods Maybe Object);
+use MooX::Types::MooseLike::Base qw(AnyOf Bool Enum Maybe);
 use namespace::clean;
 extends 'WWW::Mechanize';
 
