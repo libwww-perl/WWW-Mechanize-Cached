@@ -1,3 +1,4 @@
+requires "Cache::FileCache" => "0";
 requires "Carp" => "0";
 requires "Class::Load" => "0";
 requires "Data::Dump" => "0";
@@ -9,12 +10,15 @@ requires "namespace::clean" => "0";
 requires "perl" => "5.006";
 requires "strict" => "0";
 requires "warnings" => "0";
+recommends "CHI" => "0";
 
 on 'build' => sub {
   requires "Module::Build" => "0.28";
 };
 
 on 'test' => sub {
+  requires "CHI" => "0";
+  requires "Cache::FileCache" => "0";
   requires "File::Spec" => "0";
   requires "Find::Lib" => "0";
   requires "HTTP::Request" => "0";
