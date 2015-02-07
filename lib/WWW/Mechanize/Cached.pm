@@ -59,11 +59,9 @@ sub _build_cache {
     );
 }
 
-sub _make_request {
-
-    my $self    = shift;
-    my $request = shift;
-    my $req     = $request;
+around _make_request => sub {
+    my ( $orig, $self, $request ) = splice @_, 0, 3;
+    my $req = $request;
 
     $self->is_cached(0);
 
@@ -88,7 +86,7 @@ sub _make_request {
         return $response;
     }
 
-    $response = $self->SUPER::_make_request( $request, @_ );
+    $response = $self->$orig( $request, @_ );
 
     # decode strips some important headers.
     my $headers = $response->headers->clone;
@@ -102,7 +100,7 @@ sub _make_request {
     $self->cache->set( $req, freeze($response) ) if $should_cache;
 
     return $response;
-}
+};
 
 sub _dwarn_filter {
     my ( $ctx, $ref ) = @_;
