@@ -1,6 +1,7 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+    - Ported from Moose to Moo (Mark Gardner)
 
 1.44 2014-08-23 11:25:15 America/Toronto
     - Support working with CHI automatically if Cache::FileCache is not installed
