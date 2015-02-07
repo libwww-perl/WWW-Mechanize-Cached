@@ -6,7 +6,8 @@ use warnings;
 use WWW::Mechanize::Cached;
 use CHI;
 
-my $cache = CHI->new( driver => 'File',
+my $cache = CHI->new(
+    driver   => 'File',
     root_dir => '/tmp/mech-example'
 );
 

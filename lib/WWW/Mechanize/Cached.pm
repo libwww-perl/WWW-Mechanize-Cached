@@ -22,7 +22,7 @@ has _verbose_dwarn   => ( is => 'rw', isa => Bool, default => 0 );
 
 for (qw(cache_undef_content_length cache_zero_content_length)) {
     has $_ =>
-      ( is => 'rw', isa => AnyOf [ Bool, Enum ['warn'] ], default => 0 );
+        ( is => 'rw', isa => AnyOf [ Bool, Enum ['warn'] ], default => 0 );
 }
 has cache_mismatch_content_length => (
     is      => 'rw',
@@ -34,9 +34,9 @@ has cache => ( is => 'lazy', isa => \&_isa_warn_cache );
 
 sub _isa_warn_cache {
     return
-          if 'HASH' ne ref $_[0]
-      and $_[0]->can('get')
-      and $_[0]->can('set');
+            if 'HASH' ne ref $_[0]
+        and $_[0]->can('get')
+        and $_[0]->can('set');
     carp 'The cache param must be an initialized cache object';
     $_[0] = undef;
 }
@@ -54,8 +54,8 @@ sub _build_cache {
         namespace  => 'www-mechanize-cached',
     ) if try_load_class 'CHI';
 
-    croak(  'Could not create a default cache.'
-          . 'Please make sure either CHI or Cache::FileCache are installed or configure manually as appropriate'
+    croak(    'Could not create a default cache.'
+            . 'Please make sure either CHI or Cache::FileCache are installed or configure manually as appropriate'
     );
 }
 
@@ -151,12 +151,12 @@ sub _response_cache_ok {
         if ( exists $headers->{'client-transfer-encoding'} ) {
             for my $cte ( @{ $headers->{'client-transfer-encoding'} } ) {
 
-               # Transfer-Encoding = chunked means document consistency
-               # is independent of Content-Length value,
-               # and that Content-Length can be safely ignored.
-               # Its not obvious how the lower levels represent a
-               # failed chuncked-transfer yet.
-               # But its safe to say relying on content-length proves pointless.
+                # Transfer-Encoding = chunked means document consistency
+                # is independent of Content-Length value,
+                # and that Content-Length can be safely ignored.
+                # Its not obvious how the lower levels represent a
+                # failed chuncked-transfer yet.
+                # But its safe to say relying on content-length proves pointless.
                 return 1 if $cte eq 'chunked';
             }
         }
@@ -168,7 +168,7 @@ sub _response_cache_ok {
         if ( $self->cache_undef_content_length . q{} eq q{warn} ) {
             $self->_dwarn(
                 q[Content-Length header was undefined, not caching]
-                  . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
+                    . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
                 $headers
             );
             return 0;
@@ -182,7 +182,7 @@ sub _response_cache_ok {
         if ( $self->cache_zero_content_length . q{} eq q{warn} ) {
             $self->_dwarn(
                 q{Content-Length header was 0, not caching}
-                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
+                    . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
                 $headers
             );
             return 0;
@@ -194,12 +194,11 @@ sub _response_cache_ok {
 
     if (    defined $size
         and $size != 0
-        and $size != length( $response->content ) )
-    {
+        and $size != length( $response->content ) ) {
         if ( $self->cache_mismatch_content_length . "" eq "warn" ) {
             $self->_dwarn(
-q{Content-Length header did not match contents actual length, not caching}
-                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
+                q{Content-Length header did not match contents actual length, not caching}
+                    . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
             return 0;
         }
         if ( $self->cache_mismatch_content_length == 0 ) {

@@ -44,14 +44,15 @@ FIRST_CACHE: {
     my $cache = CHI->new( %{$cache_parms} );
     isa_ok( $cache, 'CHI::Driver' );
 
-    my $mech = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache, );
+    my $mech
+        = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache, );
     isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
     ok( !defined( $mech->is_cached ), "No request status" );
 
     my $first_req = $mech->get(URL);
     my $first     = $first_req->content;
-  SKIP: {
+SKIP: {
         skip "cannot connect to $SITE", 6 unless $mech->success;
         ok( defined $mech->is_cached, "First request" );
         ok( !$mech->is_cached,        "should be NOT cached" );
@@ -77,7 +78,7 @@ SECOND_CACHE: {
     isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
     my $fourth = $mech->get(URL)->content;
-  SKIP: {
+SKIP: {
         skip "cannot connect to $SITE", 2 unless $mech->success;
         is_deeply(
             [ split /\n/, $fourth ],
