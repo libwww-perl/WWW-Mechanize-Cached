@@ -1,5 +1,8 @@
 [PerlTidy]
-select = {bin,lib,t}/**/*.{pl,pm,t,psgi}
+argv = --profile=$ROOT/.perltidyrc
+ignore = blib/**/*
+ignore = WWW-Mechanize-Cached-*/**/*
+select = {bin,examples,lib,t}/**/*.{pl,pm,t,psgi}
 
-[SortLines]
+[SortLines::Naturally]
 select = .gitignore
