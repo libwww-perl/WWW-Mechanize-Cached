@@ -1,6 +1,7 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+    - Bump Moo version to fix tester failures (Mark Gardner)
 
 1.45 2015-02-07 18:16:43 America/Toronto
     - Ported from Moose to Moo (Mark Gardner)
