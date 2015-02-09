@@ -6,7 +6,7 @@ package WWW::Mechanize::Cached;
 use 5.006;
 
 use Class::Load 'try_load_class';
-use Moo;
+use Moo 1.004005;
 use MooX::Types::MooseLike::Base qw(AnyOf Bool Enum Maybe);
 use namespace::clean;
 extends 'WWW::Mechanize';
