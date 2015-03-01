@@ -13,7 +13,7 @@ extends 'WWW::Mechanize';
 
 use Carp qw( carp croak );
 use Data::Dump qw( dump );
-use Storable qw( freeze thaw );
+use Storable qw( nfreeze thaw );
 
 has is_cached => ( is => 'rw', isa => Maybe [Bool], default => undef );
 has positive_cache   => ( is => 'rw', isa => Bool, default => 1 );
@@ -97,7 +97,7 @@ around _make_request => sub {
     $response->decode();
     delete $response->{handlers};    ## no critic
 
-    $self->cache->set( $req, freeze($response) ) if $should_cache;
+    $self->cache->set( $req, nfreeze($response) ) if $should_cache;
 
     return $response;
 };
