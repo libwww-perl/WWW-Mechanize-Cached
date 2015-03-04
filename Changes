@@ -1,6 +1,7 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+    - Use nfreeze rather than freeze for portability (John SJ Anderson)
 
 1.46 2015-02-08 21:41:11 America/Toronto
     - Bump Moo version to fix tester failures (Mark Gardner)
