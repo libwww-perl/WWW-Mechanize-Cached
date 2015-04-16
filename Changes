@@ -1,6 +1,7 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+    - Fix cache object creation when run without args (Bjørn-Olav Strand)
 
 1.47 2015-03-03 23:00:01 America/Toronto
     - Use nfreeze rather than freeze for portability (John SJ Anderson)

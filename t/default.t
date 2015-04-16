@@ -3,12 +3,19 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
-
-BEGIN {
-    use_ok('WWW::Mechanize::Cached');
-}
+use Test::Fatal;
+use Test::More;
+use Test::RequiresInternet ( 'www.wikipedia.com' => 80 );
+use WWW::Mechanize::Cached;
 
 my $mech = WWW::Mechanize::Cached->new;
 
-$mech->get('http://www.wikipedia.com');
+is(
+    exception {
+        $mech->get('http://www.wikipedia.com');
+    },
+    undef,
+    'no exceptions',
+);
+
+done_testing();

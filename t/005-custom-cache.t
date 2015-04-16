@@ -3,6 +3,7 @@ use warnings FATAL => 'all';
 use lib 't';
 
 use Test::More tests => 4;
+use Test::RequiresInternet ( 'www.wikipedia.com' => 80 );
 
 # Google is a poor choice for this set of tests, as the main page google.com redirects, and the page it redirects
 # to specifies "do not cache", and doesn't return a content-length.
