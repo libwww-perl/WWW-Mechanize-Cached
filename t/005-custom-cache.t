@@ -3,7 +3,7 @@ use warnings FATAL => 'all';
 use lib 't';
 
 use Test::More tests => 4;
-use Test::RequiresInternet ( 'www.wikipedia.com' => 80 );
+use Test::RequiresInternet ( 'www.wikipedia.com' => 443 );
 
 # Google is a poor choice for this set of tests, as the main page google.com redirects, and the page it redirects
 # to specifies "do not cache", and doesn't return a content-length.
@@ -22,7 +22,7 @@ use Test::RequiresInternet ( 'www.wikipedia.com' => 80 );
 #< Date: Wed, 23 May 2012 10:09:55 GMT
 #< Expires: -1
 #< Cache-Control: private, max-age=0
-use constant URL  => 'http://www.wikipedia.org';
+use constant URL  => 'https://www.wikipedia.org';
 use constant SITE => 'Wikipedia';
 use TestCache;
 
