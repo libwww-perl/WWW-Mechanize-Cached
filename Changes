@@ -1,6 +1,8 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+
+1.49 2015-08-07 22:54:19 America/Toronto
     - Use SSL wikipedia URLs in tests in order to avoid redirects
 
 1.48 2015-04-16 22:32:22 Europe/Berlin
