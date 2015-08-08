@@ -44,10 +44,12 @@ sub _isa_warn_cache {
 sub _build_cache {
     my $self = shift;
 
-    return Cache::FileCache->new({
-        default_expires_in => '1d',
-        namespace          => 'www-mechanize-cached',
-    }) if try_load_class 'Cache::FileCache';
+    return Cache::FileCache->new(
+        {
+            default_expires_in => '1d',
+            namespace          => 'www-mechanize-cached',
+        }
+    ) if try_load_class 'Cache::FileCache';
     return CHI->new(
         driver     => 'File',
         expires_in => '1d',
