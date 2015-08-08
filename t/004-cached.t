@@ -1,8 +1,9 @@
 #!perl
 
 use strict;
-use warnings FATAL   => 'all';
-use Test::More tests => 14;
+use warnings FATAL => 'all';
+
+use Test::More;
 use Test::Requires 'Cache::FileCache';
 use Test::RequiresInternet ( 'www.wikipedia.com' => 80 );
 
@@ -55,7 +56,7 @@ FIRST_CACHE: {
 SKIP: {
         skip "cannot connect to $SITE", 6 unless $mech->success;
         ok( defined $mech->is_cached, "First request" );
-        ok( !$mech->is_cached,        "should be NOT cached" );
+        ok( !$mech->is_cached,        "should NOT be cached" );
         $stashpage = $first;
 
         my $second = $mech->get(URL)->content;
@@ -88,3 +89,5 @@ SKIP: {
         ok( $mech->is_cached, "... because it's from the same cache" );
     }
 }
+
+done_testing;
