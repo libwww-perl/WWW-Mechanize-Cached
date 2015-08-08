@@ -1,6 +1,7 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+    - Use SSL wikipedia URLs in tests in order to avoid redirects
 
 1.48 2015-04-16 22:32:22 Europe/Berlin
     - Fix cache object creation when run without args (Bjørn-Olav Strand)
