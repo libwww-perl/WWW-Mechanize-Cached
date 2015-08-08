@@ -25,7 +25,7 @@ use Test::RequiresInternet ( 'www.wikipedia.com' => 80 );
 #< Cache-Control: private, max-age=0
 #
 
-use constant URL  => 'http://www.wikipedia.org';
+use constant URL  => 'https://www.wikipedia.org';
 use constant SITE => 'Wikipedia';
 
 BEGIN {
