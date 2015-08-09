@@ -1,14 +1,9 @@
-#!/usr/bin/env perl
-
 use strict;
 use warnings;
 
 use HTTP::Request;
-use Test::More tests => 6;
-
-BEGIN {
-    use_ok('WWW::Mechanize::Cached');
-}
+use Test::More;
+use WWW::Mechanize::Cached;
 
 my $mech = WWW::Mechanize::Cached->new;
 
@@ -27,3 +22,5 @@ ok(
     $mech->_cache_ok( HTTP::Response->new(404) ),
     "will cache 404 when negative"
 );
+
+done_testing();

@@ -1,17 +1,12 @@
-#!/usr/bin/perl
 use strict;
-use warnings FATAL   => 'all';
-use Test::More tests => 2;
-use vars qw( $class );
+use warnings FATAL => 'all';
 
-BEGIN {
-    $class = 'WWW::Mechanize::Cached';
-    use_ok $class;
-}
+use Test::More;
 
-# ------------------------------------------------------------------------
+use WWW::Mechanize::Cached;
 
-{
-    my $cacher = $class->new;
-    isa_ok( $cacher => $class );
-}
+my $class  = 'WWW::Mechanize::Cached';
+my $cacher = $class->new;
+isa_ok( $cacher => $class );
+
+done_testing();

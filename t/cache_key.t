@@ -1,20 +1,16 @@
-#!/usr/bin/env perl
+use strict;
+use warnings;
 
 # For more info on why these tests are important, see RT #56757 and RT #5705
 
-use strict;
-use warnings;
-use lib 't';
-
-use Find::Lib;
 use File::Spec;
+use Find::Lib;
 use Path::Class qw(file);
-use Test::More tests => 64;
-use TestCache;
+use Test::More;
+use WWW::Mechanize::Cached;
 
-BEGIN {
-    use_ok('WWW::Mechanize::Cached');
-}
+use lib 't';
+use TestCache;
 
 my $cache = TestCache->new();
 isa_ok( $cache, 'TestCache' );
@@ -40,8 +36,9 @@ diag("reversing page order");
 
 check_cache( reverse @iter );
 
-sub check_cache {
+done_testing();
 
+sub check_cache {
     my @pages = @_;
     foreach my $i (@pages) {
         $mech->get( page_url($i) );
@@ -54,12 +51,10 @@ sub check_cache {
 }
 
 sub page_url {
-
     my $i      = shift;
     my $prefix = 'file://';
     $prefix .= '/' if $^O =~ m{Win};
     return $prefix
         . File::Spec->catfile( Find::Lib::base(), 'pages', "$i.html" );
-
 }
 

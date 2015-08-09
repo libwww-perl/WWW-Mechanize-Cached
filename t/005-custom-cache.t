@@ -1,9 +1,9 @@
 use strict;
 use warnings FATAL => 'all';
-use lib 't';
 
-use Test::More tests => 4;
+use Test::More;
 use Test::RequiresInternet ( 'www.wikipedia.com' => 443 );
+use WWW::Mechanize::Cached;
 
 # Google is a poor choice for this set of tests, as the main page google.com redirects, and the page it redirects
 # to specifies "do not cache", and doesn't return a content-length.
@@ -24,13 +24,11 @@ use Test::RequiresInternet ( 'www.wikipedia.com' => 443 );
 #< Cache-Control: private, max-age=0
 use constant URL  => 'https://www.wikipedia.org';
 use constant SITE => 'Wikipedia';
+
+use lib 't';
 use TestCache;
 
 my $SITE = SITE();
-
-BEGIN {
-    use_ok('WWW::Mechanize::Cached');
-}
 
 my $cache = TestCache->new();
 isa_ok( $cache, 'TestCache' );
@@ -50,3 +48,5 @@ SKIP: {
     skip "cannot connect to $SITE", 1 unless $mech->success;
     is( $third->content, "DUMMY", "Went thru my dummy cache" );
 }
+
+done_testing;

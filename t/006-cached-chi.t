@@ -1,8 +1,8 @@
 #!perl
 
 use strict;
-use warnings FATAL   => 'all';
-use Test::More tests => 14;
+use warnings FATAL => 'all';
+use Test::More;
 use Test::Requires 'CHI';
 use Test::RequiresInternet ( 'www.wikipedia.com' => 443 );
 
@@ -89,3 +89,5 @@ SKIP: {
         ok( $mech->is_cached, "... because it's from the same cache" );
     }
 }
+
+done_testing;
