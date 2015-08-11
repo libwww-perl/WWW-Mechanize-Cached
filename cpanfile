@@ -22,6 +22,7 @@ on 'test' => sub {
   requires "File::Spec" => "0";
   requires "Find::Lib" => "0";
   requires "HTTP::Request" => "0";
+  requires "LWP::ConsoleLogger::Easy" => "0";
   requires "Path::Class" => "0";
   requires "Test::Fatal" => "0";
   requires "Test::More" => "0";
@@ -29,7 +30,6 @@ on 'test' => sub {
   requires "Test::RequiresInternet" => "0";
   requires "constant" => "0";
   requires "lib" => "0";
-  requires "vars" => "0";
 };
 
 on 'configure' => sub {
