@@ -1,6 +1,7 @@
 use strict;
 use warnings FATAL => 'all';
 
+use LWP::ConsoleLogger::Easy qw( debug_ua );
 use Test::More;
 use Test::RequiresInternet ( 'www.wikipedia.com' => 443 );
 use WWW::Mechanize::Cached;
@@ -38,6 +39,7 @@ my $mech = WWW::Mechanize::Cached->new(
     autocheck      => 0,
     _verbose_dwarn => 1
 );
+debug_ua( $mech );
 isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
 my $first  = $mech->get(URL);
