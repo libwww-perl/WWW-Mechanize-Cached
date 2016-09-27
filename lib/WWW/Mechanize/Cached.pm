@@ -5,7 +5,7 @@ package WWW::Mechanize::Cached;
 
 use 5.006;
 
-use Class::Load 'try_load_class';
+use Module::Runtime 'use_module';
 use Moo 1.004005;
 use MooX::Types::MooseLike::Base qw(AnyOf Bool Enum Maybe);
 use namespace::clean;
@@ -49,12 +49,13 @@ sub _build_cache {
             default_expires_in => '1d',
             namespace          => 'www-mechanize-cached',
         }
-    ) if try_load_class 'Cache::FileCache';
+    ) if eval { use_module( 'Cache::FileCache' ) };
+
     return CHI->new(
         driver     => 'File',
         expires_in => '1d',
         namespace  => 'www-mechanize-cached',
-    ) if try_load_class 'CHI';
+    ) if eval { use_module ( 'CHI' ) };
 
     croak(    'Could not create a default cache.'
             . 'Please make sure either CHI or Cache::FileCache are installed or configure manually as appropriate'
