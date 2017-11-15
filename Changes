@@ -1,5 +1,7 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
+{{$NEXT}}
+
 1.51      2017-11-15 21:43:33Z
     - Replace Class::Load with Module::Runtime (Yanick Champoux) (GH#12)
 
