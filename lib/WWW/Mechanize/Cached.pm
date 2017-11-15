@@ -235,7 +235,7 @@ sub _cache_ok {
     use WWW::Mechanize::Cached;
 
     my $cacher = WWW::Mechanize::Cached->new;
-    $cacher->get( $url );
+    $cacher->get( 'https://metacpan.org' );
 
     # or, with your own Cache object
     use CHI;
@@ -254,7 +254,7 @@ sub _cache_ok {
 
 Uses the L<Cache::Cache> hierarchy by default to implement a caching Mech. This
 lets one perform repeated requests without hammering a server impolitely.
-Please note that L<Cache::Cache> has been superceded by L<CHI>, but the default
+Please note that L<Cache::Cache> has been superseded by L<CHI>, but the default
 has not been changed here for reasons of backwards compatibility.  For this
 reason, you are encouraged to provide your own L<CHI> caching object to
 override the default.
@@ -376,7 +376,7 @@ This is configuration option which adjusts how caching behaviour performs when
 the Content-Length header differs from the length of the content itself. ( Which
 usually indicates a transmission error )
 
-Setting this value to 0, will silenly not cache pages with a Content-Length
+Setting this value to 0, will silently not cache pages with a Content-Length
 mismatch.
 
 Setting this value to 1, will cache pages even if the Content-Length header
