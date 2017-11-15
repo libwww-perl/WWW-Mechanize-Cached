@@ -2,7 +2,7 @@
 
 WWW::Mechanize::Cached - Cache response to be polite
 
-[![Build Status](https://travis-ci.org/oalders/www-mechanize-cached.png?branch=master)](https://travis-ci.org/oalders/www-mechanize-cached)
+[![Build Status](https://travis-ci.org/libwww-perl/www-mechanize-cached.png?branch=master)](https://travis-ci.org/libwww-perl/www-mechanize-cached)
 
 # VERSION
 

@@ -93,13 +93,13 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/oalders/www-mechanize-cached/issues"
+         "web" : "https://github.com/libwww-perl/www-mechanize-cached/issues"
       },
-      "homepage" : "https://github.com/oalders/www-mechanize-cached",
+      "homepage" : "https://github.com/libwww-perl/www-mechanize-cached",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/oalders/www-mechanize-cached.git",
-         "web" : "https://github.com/oalders/www-mechanize-cached"
+         "url" : "https://github.com/libwww-perl/www-mechanize-cached.git",
+         "web" : "https://github.com/libwww-perl/www-mechanize-cached"
       }
    },
    "version" : "1.51",
