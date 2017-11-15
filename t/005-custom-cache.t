@@ -39,7 +39,7 @@ my $mech = WWW::Mechanize::Cached->new(
     autocheck      => 0,
     _verbose_dwarn => 1
 );
-debug_ua( $mech );
+debug_ua($mech);
 isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
 my $first  = $mech->get(URL);

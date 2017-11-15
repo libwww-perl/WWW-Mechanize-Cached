@@ -49,7 +49,7 @@ FIRST_CACHE: {
 
     my $mech
         = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache, );
-    debug_ua( $mech );
+    debug_ua($mech);
     isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
     ok( !defined( $mech->is_cached ), "No request status" );
@@ -79,7 +79,7 @@ SECOND_CACHE: {
     isa_ok( $cache, 'CHI::Driver' );
 
     my $mech = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache );
-    debug_ua( $mech );
+    debug_ua($mech);
     isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
     my $fourth = $mech->get(URL)->content;

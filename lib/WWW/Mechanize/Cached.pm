@@ -48,13 +48,13 @@ sub _build_cache {
             default_expires_in => '1d',
             namespace          => 'www-mechanize-cached',
         }
-    ) if eval { use_module( 'Cache::FileCache' ) };
+    ) if eval { use_module('Cache::FileCache') };
 
     return CHI->new(
         driver     => 'File',
         expires_in => '1d',
         namespace  => 'www-mechanize-cached',
-    ) if eval { use_module ( 'CHI' ) };
+    ) if eval { use_module('CHI') };
 
     croak(    'Could not create a default cache.'
             . 'Please make sure either CHI or Cache::FileCache are installed or configure manually as appropriate'
@@ -169,7 +169,7 @@ sub _response_cache_ok {
     if ( not defined $size ) {
         if ( $self->cache_undef_content_length . q{} eq q{warn} ) {
             $self->_dwarn(
-                q[Content-Length header was undefined, not caching]
+                      q[Content-Length header was undefined, not caching]
                     . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
                 $headers
             );
@@ -183,7 +183,7 @@ sub _response_cache_ok {
     if ( defined $size and $size == 0 ) {
         if ( $self->cache_zero_content_length . q{} eq q{warn} ) {
             $self->_dwarn(
-                q{Content-Length header was 0, not caching}
+                      q{Content-Length header was 0, not caching}
                     . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
                 $headers
             );
