@@ -107,7 +107,6 @@ around _make_request => sub {
 };
 
 sub _dwarn_filter {
-    my ( $ctx, $ref ) = @_;
     return {
         hide_keys => [
             qw( _content cookie content set-cookie handlers cookie_jar cache req res page_stack )
