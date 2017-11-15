@@ -15,6 +15,8 @@ use Carp qw( carp croak );
 use Data::Dump qw( dump );
 use Storable qw( nfreeze thaw );
 
+our $VERSION = '1.51';
+
 has is_cached => ( is => 'rw', isa => Maybe [Bool], default => undef );
 has positive_cache   => ( is => 'rw', isa => Bool, default => 1 );
 has ref_in_cache_key => ( is => 'rw', isa => Bool, default => 0 );
