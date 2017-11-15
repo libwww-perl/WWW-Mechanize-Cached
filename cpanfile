@@ -19,7 +19,6 @@ on 'test' => sub {
   requires "File::Spec" => "0";
   requires "Find::Lib" => "0";
   requires "HTTP::Request" => "0";
-  requires "LWP::ConsoleLogger::Easy" => "0";
   requires "Path::Class" => "0";
   requires "Test::Fatal" => "0";
   requires "Test::More" => "0";
