@@ -34,6 +34,28 @@ has cache_mismatch_content_length => (
 
 has cache => ( is => 'lazy', isa => \&_isa_warn_cache );
 
+sub FOREIGNBUILDARGS {
+    my ($class, %args) = @_;
+
+    # WWW::Mechanize/LWP::UserAgent would complain about these
+    for my $attribute (
+        qw(
+            is_cached
+            positive_cache
+            ref_in_cach_key
+            _verbose_dwarn
+            cache_undef_content_length
+            cache_zero_content_length
+            cache_mismatch_content_length
+            cache
+        )
+    ) {
+        delete $args{ $attribute };
+    }
+
+    return %args;
+}
+
 sub _isa_warn_cache {
     return
             if 'HASH' ne ref $_[0]
