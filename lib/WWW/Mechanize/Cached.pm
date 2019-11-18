@@ -21,7 +21,7 @@ has is_cached => ( is => 'rw', isa => Maybe [Bool], default => undef );
 has positive_cache   => ( is => 'rw', isa => Bool, default => 1 );
 has ref_in_cache_key => ( is => 'rw', isa => Bool, default => 0 );
 has _verbose_dwarn   => ( is => 'rw', isa => Bool, default => 0 );
-has _last_request => ( is => 'rw' );
+has _last_request    => ( is => 'rw' );
 
 has [qw/ cache_undef_content_length cache_zero_content_length /] =>
     ( is => 'rw', isa => AnyOf [ Bool, Enum ['warn'] ], default => 0 );
