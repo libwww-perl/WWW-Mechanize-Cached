@@ -1,6 +1,8 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+    - Implement invalidate_last_request to remove the last request from the
+      cache (GH#18) (E. Choroba)
 
 1.51      2017-11-15 21:43:33Z
     - Replace Class::Load with Module::Runtime (Yanick Champoux) (GH#12)
