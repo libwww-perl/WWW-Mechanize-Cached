@@ -1,6 +1,7 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+    - Remove warnings on new() (GH#15) (Jonathan Rubin, simbabque)
 
 1.52      2019-11-18 14:15:37Z
     - Implement invalidate_last_request to remove the last request from the
