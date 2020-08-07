@@ -188,9 +188,9 @@ sub _response_cache_ok {
 
     my $size;
     {
-        if ( $headers->header('Client-Transfer-Encoding')) {
+        if ( $headers->header('Client-Transfer-Encoding') ) {
             my @cte = $headers->header('Client-Transfer-Encoding');
-            for my $cte ( @cte ) {
+            for my $cte (@cte) {
 
                 # Transfer-Encoding = chunked means document consistency
                 # is independent of Content-Length value,
@@ -264,6 +264,7 @@ sub _cache_ok {
     return 1;
 }
 
+no warnings;
 "We miss you, Spoon";    ## no critic
 
 # ABSTRACT: Cache response to be polite
