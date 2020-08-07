@@ -188,15 +188,15 @@ sub _response_cache_ok {
 
     my $size;
     {
-        ## no critic (ValuesAndExpressions::ProhibitAccessOfPrivateData)
-        if ( exists $headers->{'client-transfer-encoding'} ) {
-            for my $cte ( @{ $headers->{'client-transfer-encoding'} } ) {
+        if ( $headers->header('Client-Transfer-Encoding')) {
+            my @cte = $headers->header('Client-Transfer-Encoding');
+            for my $cte ( @cte ) {
 
                 # Transfer-Encoding = chunked means document consistency
                 # is independent of Content-Length value,
                 # and that Content-Length can be safely ignored.
                 # Its not obvious how the lower levels represent a
-                # failed chuncked-transfer yet.
+                # failed chunked-transfer yet.
                 # But its safe to say relying on content-length proves pointless.
                 return 1 if $cte eq 'chunked';
             }
