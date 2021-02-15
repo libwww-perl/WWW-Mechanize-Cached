@@ -3,8 +3,6 @@
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 13;
-
 use constant {
     ADDRESS           => 'wikipedia.org',
     DIFFERENT_ADDRESS => 'en.wikipedia.org',
@@ -13,6 +11,8 @@ use constant {
 
 use Test::RequiresInternet (ADDRESS) => 443,
     (DIFFERENT_ADDRESS)              => 443;
+
+use Test::More tests => 13;
 
 use WWW::Mechanize::Cached;
 
