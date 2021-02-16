@@ -2,11 +2,9 @@
 
 WWW::Mechanize::Cached - Cache response to be polite
 
-[![Build Status](https://travis-ci.org/libwww-perl/WWW-Mechanize-Cached.png?branch=master)](https://travis-ci.org/libwww-perl/WWW-Mechanize-Cached)
-
 # VERSION
 
-version 1.54
+version 1.55
 
 # SYNOPSIS
 
