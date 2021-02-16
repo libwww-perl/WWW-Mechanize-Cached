@@ -1,5 +1,7 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
+{{$NEXT}}
+
 1.55      2021-02-16 02:40:00Z
      - remove plan declared before Test::RequiresInternet (GH#26) (Dan Book)
 
