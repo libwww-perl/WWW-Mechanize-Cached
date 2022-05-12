@@ -1,6 +1,7 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+    - Fix "Can't store CODE items" error (GH#28) (Olaf Alders)
 
 1.55      2021-02-16 02:40:00Z
      - remove plan declared before Test::RequiresInternet (GH#26) (Dan Book)
