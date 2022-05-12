@@ -1,21 +1,18 @@
-use strict;
-use warnings FATAL => 'all';
-
 package WWW::Mechanize::Cached;
 
-use 5.006;
-
-use Module::Runtime 'use_module';
 use Moo 1.004005;
-use MooX::Types::MooseLike::Base qw(AnyOf Bool Enum Maybe);
-use namespace::clean;
-extends 'WWW::Mechanize';
-
-use Carp qw( carp croak );
-use Data::Dump qw( dump );
-use Storable qw( nfreeze thaw );
+use warnings FATAL => 'all';
 
 our $VERSION = '1.56';
+
+use Carp qw( carp croak );
+use Module::Runtime qw( use_module );
+use MooX::Types::MooseLike::Base qw( AnyOf Bool Enum Maybe );
+use Storable qw( nfreeze thaw );
+
+use namespace::clean;
+
+extends 'WWW::Mechanize';
 
 has is_cached        => ( is => 'rw', isa => Maybe [Bool], default => undef );
 has positive_cache   => ( is => 'rw', isa => Bool, default => 1 );
