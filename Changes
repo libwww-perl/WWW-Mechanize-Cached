@@ -1,6 +1,6 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
-{{$NEXT}}
+1.56      2022-05-24 22:07:41Z
     - Bump required version of LWP::UserAgent to 6.66 (GH#30) (Olaf Alders)
 
 1.55      2021-02-16 02:40:00Z
