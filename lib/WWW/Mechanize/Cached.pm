@@ -3,7 +3,7 @@ package WWW::Mechanize::Cached;
 use Moo 1.004005;
 use warnings FATAL => 'all';
 
-our $VERSION = '1.56';
+our $VERSION = '1.57';
 
 use Carp qw( carp croak );
 use Module::Runtime qw( use_module );
