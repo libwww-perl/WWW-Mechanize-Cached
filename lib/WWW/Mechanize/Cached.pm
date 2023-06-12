@@ -5,10 +5,10 @@ use warnings FATAL => 'all';
 
 our $VERSION = '1.57';
 
-use Carp qw( carp croak );
-use Module::Runtime qw( use_module );
+use Carp                         qw( carp croak );
+use Module::Runtime              qw( use_module );
 use MooX::Types::MooseLike::Base qw( AnyOf Bool Enum Maybe );
-use Storable qw( nfreeze thaw );
+use Storable                     qw( nfreeze thaw );
 
 use namespace::clean;
 

@@ -2,7 +2,7 @@ use strict;
 use warnings FATAL => 'all';
 
 use Test::More;
-use Test::Warnings qw( :all :no_end_test );
+use Test::Warnings         qw( :all :no_end_test );
 use WWW::Mechanize::Cached ();
 
 use lib 't';
