@@ -65,17 +65,23 @@ sub _isa_warn_cache {
 sub _build_cache {
     my $self = shift;
 
-    return Cache::FileCache->new(
-        {
-            default_expires_in => '1d',
-            namespace          => 'www-mechanize-cached',
-            cache_root         => File::XDG->new(
-                name => 'WWW-Mechanize-Cached',
-                api  => 1,
-            )->cache_home->stringify,
-            directory_umask    => 077,
-        }
-    ) if eval { use_module('Cache::FileCache') && use_module('File::XDG') };
+    if ( eval { use_module('Cache::FileCache') && use_module('File::XDG') } )
+    {
+        my $cache_root = File::XDG->new(
+            name => 'WWW-Mechanize-Cached',
+            api  => 1,
+        )->cache_home;
+        $cache_root->mkdir( { mode => 0700 } );
+        chmod 0700, "$cache_root";
+        return Cache::FileCache->new(
+            {
+                default_expires_in => '1d',
+                namespace          => 'www-mechanize-cached',
+                cache_root         => "$cache_root",
+                directory_umask    => 077,
+            }
+        );
+    }
 
     return CHI->new(
         driver     => 'File',
