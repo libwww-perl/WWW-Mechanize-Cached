@@ -97,8 +97,30 @@ jobs:
           - "5.40"
           - "5.42"
         exclude:
+          - os: macos-latest
+            perl-version: "5.12"
+          - os: macos-latest
+            perl-version: "5.14"
+          - os: macos-latest
+            perl-version: "5.16"
+          - os: macos-latest
+            perl-version: "5.18"
+          - os: macos-latest
+            perl-version: "5.20"
+          - os: macos-latest
+            perl-version: "5.22"
           - os: windows-latest
             perl-version: "5.12"
+          - os: windows-latest
+            perl-version: "5.14"
+          - os: windows-latest
+            perl-version: "5.16"
+          - os: windows-latest
+            perl-version: "5.18"
+          - os: windows-latest
+            perl-version: "5.20"
+          - os: windows-latest
+            perl-version: "5.22"
           - os: windows-latest
             perl-version: "5.32"
           - os: windows-latest
