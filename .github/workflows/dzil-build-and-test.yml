@@ -11,6 +11,30 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint-job:
+    name: Lint with precious
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set Up Perl
+        uses: shogo82148/actions-setup-perl@v1.41.0
+        with:
+          perl-version: "5.36"
+      - name: Install precious and omegasort via ubi
+        uses: oalders/install-ubi-action@v0.0.6
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          projects: |
+            houseabsolute/precious
+            houseabsolute/omegasort
+      - name: Install Perl lint tools
+        uses: perl-actions/install-with-cpm@v2
+        with:
+          install: |
+            App::perlvars
+            Perl::Tidy
+      - name: Run precious lint
+        run: precious lint --all
   build-job:
     name: Build distribution
     runs-on: ubuntu-latest

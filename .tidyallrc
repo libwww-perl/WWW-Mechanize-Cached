@@ -1,8 +1,0 @@
-[PerlTidy]
-argv = --profile=$ROOT/.perltidyrc
-ignore = blib/**/*
-ignore = WWW-Mechanize-Cached-*/**/*
-select = {bin,examples,lib,t}/**/*.{pl,pm,t,psgi}
-
-[SortLines::Naturally]
-select = .gitignore

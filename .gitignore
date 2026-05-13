@@ -1,4 +1,3 @@
-WWW-Mechanize-Cached*
-.build
 *.sw*
-.tidyall.d/
+.build
+WWW-Mechanize-Cached*
