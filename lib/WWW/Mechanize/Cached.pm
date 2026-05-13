@@ -69,8 +69,12 @@ sub _build_cache {
         {
             default_expires_in => '1d',
             namespace          => 'www-mechanize-cached',
+            cache_root         => File::XDG->new(
+                name => 'WWW-Mechanize-Cached',
+            )->cache_home->stringify,
+            directory_umask    => 077,
         }
-    ) if eval { use_module('Cache::FileCache') };
+    ) if eval { use_module('Cache::FileCache') && use_module('File::XDG') };
 
     return CHI->new(
         driver     => 'File',
