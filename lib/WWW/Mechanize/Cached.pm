@@ -71,6 +71,7 @@ sub _build_cache {
             namespace          => 'www-mechanize-cached',
             cache_root         => File::XDG->new(
                 name => 'WWW-Mechanize-Cached',
+                api  => 1,
             )->cache_home->stringify,
             directory_umask    => 077,
         }
@@ -319,6 +320,7 @@ The default Cache object is set up with the following params:
         namespace          => 'www-mechanize-cached',
         cache_root         => File::XDG->new(
             name => 'WWW-Mechanize-Cached',
+            api  => 1,
         )->cache_home->stringify,
         directory_umask    => 077,
     };
