@@ -3,6 +3,7 @@ use warnings;
 
 use Path::Tiny ();
 use Test::More;
+use Test::Needs qw( Cache::FileCache );
 
 my $tmp;
 
