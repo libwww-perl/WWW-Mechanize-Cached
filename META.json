@@ -59,10 +59,12 @@
             "Cache::FileCache" : "0",
             "Carp" : "0",
             "Data::Dump" : "0",
+            "File::XDG" : "1.03",
             "LWP::UserAgent" : "6.66",
             "Module::Runtime" : "0",
             "Moo" : "1.004005",
             "MooX::Types::MooseLike::Base" : "0",
+            "Path::Tiny" : "0.150",
             "Storable" : "2.21",
             "WWW::Mechanize" : "0",
             "namespace::clean" : "0",
@@ -81,7 +83,7 @@
             "File::Spec" : "0",
             "HTTP::Request" : "0",
             "HTTP::Response" : "0",
-            "Path::Tiny" : "0",
+            "Path::Tiny" : "0.150",
             "Test::Fatal" : "0",
             "Test::More" : "0",
             "Test::Needs" : "0",
@@ -107,7 +109,7 @@
          "web" : "https://github.com/libwww-perl/WWW-Mechanize-Cached"
       }
    },
-   "version" : "1.57",
+   "version" : "2.00",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.042002"
@@ -203,7 +205,7 @@
             "class" : "Dist::Zilla::Plugin::MakeMaker",
             "config" : {
                "Dist::Zilla::Role::TestRunner" : {
-                  "default_jobs" : "1"
+                  "default_jobs" : "8"
                }
             },
             "name" : "@Author::OALDERS/MakeMaker",
@@ -379,7 +381,7 @@
             "class" : "Dist::Zilla::Plugin::RunExtraTests",
             "config" : {
                "Dist::Zilla::Role::TestRunner" : {
-                  "default_jobs" : "1"
+                  "default_jobs" : "8"
                }
             },
             "name" : "@Author::OALDERS/RunExtraTests",
@@ -707,7 +709,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "v1.57",
+                  "tag" : "v2.00",
                   "tag_format" : "v%V",
                   "tag_message" : "v%V"
                },

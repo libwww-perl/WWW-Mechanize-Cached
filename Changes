@@ -1,6 +1,6 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
-{{$NEXT}}
+2.00      2026-05-14 16:25:54Z
     - Place the default Cache::FileCache under XDG cache home (typically
       ~/.cache/WWW-Mechanize-Cached) and create cache directories with
       directory_umask => 077. Cache trees created by earlier versions
