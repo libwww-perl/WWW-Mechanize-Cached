@@ -1,6 +1,11 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
 {{$NEXT}}
+    - Place the default Cache::FileCache under XDG cache home (typically
+      ~/.cache/WWW-Mechanize-Cached) and create cache directories with
+      directory_umask => 077. Cache trees created by earlier versions
+      under /tmp/FileCache are no longer used; users upgrading should
+      remove that directory if it exists.
 
 1.56      2022-05-24 22:07:41Z
     - Bump required version of LWP::UserAgent to 6.66 (GH#30) (Olaf Alders)
